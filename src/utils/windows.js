@@ -1,0 +1,268 @@
+// ============================================================
+// MESOB Sululta Branch - Service Windows Data
+// Each window has: id, name (OR), nameEN, title (category name in OR), titleEN
+// ============================================================
+
+export const SERVICE_WINDOWS = [
+  {
+    id: 1,
+    name: "Fooddaa 1ffaa",
+    nameEN: "Window 1",
+    title: "Kenna Ragaalee Bu'uuraa",
+    titleEN: "Basic Document Services",
+    titleAM: "መሠረታዊ ሰነዶች አገልግሎት",
+    color: "primary",
+    services: [
+      "Waraqaa Eenyummaa Jirataa kennuu (Resident ID Issuance)",
+      "Simannaa maamila haaraa fi Gurgurtaa Biilii Bishanii (New Customer Reception & Water Bill)",
+      "Qaama seerummaa waldaalee IMX kennuu (IMX Association Legal Status)",
+      "Hoji dhabdoota galmeessuu, kaardii hoji dhabdummaa kennuu (Job Seeker Registration & Card Issuance)",
+      "Kaardii Hoji dhabdumma Haaromsuu (Job Seeker Card Renewal)"
+    ]
+  },
+  {
+    id: 2,
+    name: "Fooddaa 2ffaa",
+    nameEN: "Window 2",
+    title: "Deeggersa fi Xalayaalee",
+    titleEN: "Support Letters & Insurance",
+    titleAM: "ድጋፍ ደብዳቤዎች እና ኢንሹራንስ",
+    color: "blue",
+    services: [
+      "Xalayaa deggarsaa daldaltootaaf kennuu (Support Letter for Traders - Market Linkage)",
+      "Inshuraansii fayyaa hawaasaa kennuu (Community Health Insurance Issuance)",
+      "Inshuraansii fayyaa hawaasaa haaromsuu (Community Health Insurance Renewal)",
+      "Deeggersa waldaalee IMX paakeejiwwan deggersaa (IMX Association Support Packages)",
+      "Waldaalee IMX Investimentiitti ce'aniif waraqaa ragaa kennuu (Certificate for IMX to Investment)",
+      "Deggersa aaddaa addaa waldaalee fi walitti hidhamiinsa gabaa WHG uumu kennuu",
+      "Xalayaa deeggarsaa adda addaa kennuu (Various Support Letters)",
+      "Deeggarsa Hayyama barjaalee kennuu (Billboard License Support)",
+      "Xalayaa hayyama beeksiisa sagalee kennuu (Audio Advertisement Permit Letter)",
+      "Deggarsaa Qonnaan bulaa investimentiitti ce'uu fi W/hidhaminsa gabaa kennuu (Farmer Investment Transition Support)",
+      "Xalayaa Deeggarsaa Kaafamtoota Misoomaa Invastimantii ce'anii fi dhimmota biroof kennuu (Displaced Persons Investment Support Letter)",
+      "Xalayaa Deegarsa Barsiisoota fi Hoggantoota (Support Letter for Teachers & Managers)"
+    ]
+  },
+  {
+    id: 3,
+    name: "Fooddaa 3ffaa",
+    nameEN: "Window 3",
+    title: "Komii fi Iyyannoo",
+    titleEN: "Complaints & Petitions",
+    titleAM: "ቅሬታዎች እና ጥያቄዎች",
+    color: "purple",
+    services: [
+      "Deegarsa Bu'uuraalee Misooma (Ibsaa, Daandii, Bishaanii) Kennuu (Infrastructure Support - Electricity, Road, Water)",
+      "Komii adda addaa keessuumeessuu (Various Complaints Handling)",
+      "Iyyannoo adda addaa keessuumeessuu (Various Petitions Handling)",
+      "Komii hojjattoota mootummaa Keessumeessuu (Government Employees Complaints)",
+      "Komii kaafamtoota Misoomaa Hiikuu (Development Displaced Persons Complaint Resolution)"
+    ]
+  },
+  {
+    id: 4,
+    name: "Fooddaa 4ffaa",
+    nameEN: "Window 4",
+    title: "Barnootaa fi Ijaarsa",
+    titleEN: "Education & Construction",
+    titleAM: "ትምህርት እና ግንባታ",
+    color: "gold",
+    services: [
+      "Tajaajila jijjiirraa barsiisotaa/hooggantoota manneen barnootaa (Teacher/School Manager Transfer)",
+      "Ragaa barnootaa sadarkaa naannoo (kutaa 6ffaa fi 8ffaa) bade kennuu (Lost Regional Certificate Grade 6 & 8)",
+      "Hayyama Gahumsa Manneen Barnoota Dhuunfaa fi miti mootummaa Kennuu, Haaromsuu, Kan bade bakka buusuufi deebisuu (Private/NGO School License)",
+      "Hayyama suphaa mana mootummaa kennuu (Government House Repair Permit)",
+      "Kaffaltii kiraa mana mootummaa fi dhuunfaa raawwachiisuu (Govt/Private House Rent Payment)",
+      "Heyyamaa Tajaajila Qalmaa Kennuu - Lakk.Qeera Kennuu (Slaughter Service License)",
+      "Hayyama manneen yaalaa dhuunfaa kennuu (Private Clinic License Issuance)",
+      "Hayyama manneen yaalaa dhuunfaa haaromsuu (Private Clinic License Renewal)",
+      "Sanitary, Structure, Architecture - Qindeessa Garee Qorannoo Mirkaneessa dizaayinii fi To'annoo Projeectii Daandii III (Design Review & Project Control)",
+      "Electrical Eng., Surveyor, Electro mechanical, Quantity - Wal simsiisisa Pilaanii (Plan Coordination)"
+    ]
+  },
+  {
+    id: 5,
+    name: "Fooddaa 5ffaa",
+    nameEN: "Window 5",
+    title: "Mirkaneessa Gahumsa Ogummaa",
+    titleEN: "Professional Competence",
+    titleAM: "የሙያ ብቃት ማረጋገጫ",
+    color: "teal",
+    services: [
+      "Qindeessa Garee Galmee fi mirkaneessa Gahumsaa Industrii konistraakshinii (Construction Industry Competence Registration)",
+      "Waraqaa qulqullinaa gahumsa ogummaa fayyaa kennuu (Health Professional Competence Certificate)",
+      "Waraqaa qulqullinaa gahumsa ogummaa fayyaa haaromsuu (Health Professional Certificate Renewal)",
+      "Waraqaa qulqullinaa gahumsa dhaabbilee daldalaa kennuu (Commercial Establishment Competence Certificate)",
+      "Waraqaa qulqullinaa gahumsa dhaabilee daldalaa haaromsuu (Commercial Establishment Certificate Renewal)",
+      "Hayyama gahumsa ogummaa dhaabilee aadaa kennuu, haaromsuu, haquu (Cultural Institution Professional License)"
+    ]
+  },
+  {
+    id: 6,
+    name: "Fooddaa 6ffaa",
+    nameEN: "Window 6",
+    title: "Hayyama Daldalaa fi Geejiba",
+    titleEN: "Trade License & Transport",
+    titleAM: "የንግድ ፈቃድ እና ትራንስፖርት",
+    color: "red",
+    services: [
+      "Hayyama daldalaa kennuu, haaromsuu, fooyyessuu fi haquu (Trade License - New, Renewal, Amendment, Cancellation)",
+      "Moggaasa maqaa daldalaa kennuu (Trade Name Registration)",
+      "Hayyama Qorannoo Hojiiwwan Albuudaa kennuu (Mining Research License)",
+      "Hayyama Qorannoo Hojiiwwan Albuudaa Haaroomsuu (Mining Research License Renewal)",
+      "Hayyama Oomisha Albuudaa kennuu (Mining Production License)",
+      "Hayyama Oomisha Albuudaa Haaroomsuu (Mining Production License Renewal)",
+      "Hayyama Oomishaa Albuudaa Babal'isuu (Mining Production Expansion)",
+      "Hayyama Oomisha Albuudaa Dabarsuu (Mining License Transfer)",
+      "Heeyyama oomisha bishaanii kennu (Water Production License)",
+      "Heeyyama Oomisha bishaanii haaromsuu fi haquu (Water Production License Renewal/Cancellation)",
+      "Hayyama konkolaachisaa haromsuu (Driving License Renewal)",
+      "Jijjiirraa faayila konkolaachisaa (Driving File Transfer)",
+      "Hayyama konkolaachisaa kennuu (New Driving License)",
+      "Hayyama Bobbii Konkoolaataa kennuu (Vehicle Deployment Permit)",
+      "Murtii taarifaa beeksisuu (Tariff Decision Publication)",
+      "Hayyama ogummaa galtee qonnaa kennuu (Agricultural Input Professional License)",
+      "Hayyama ogummaa galtee qoricha beeyladaa kennuu (Veterinary Medicine Professional License)",
+      "Hayyama mirk. gahumsa ogummaa AI kennuu fi haaromsuu (AI Artificial Insemination License)",
+      "Hayyama mirk. gahumsa ogummaa nyaata beeyladaa kennuu fi haaromsuu (Animal Feed License)",
+      "Hayyama mirk. gahumsa ogummaa manaa qalmaa Kennuu fi haaromsuu (Slaughter House License)",
+      "Hayyama mirk. gahumsa ogummaa horsiisa lukkuu kennuu (Poultry Farming License)",
+      "Hayyama mirk. gahumsa ogummaa horsiisa horii Aannaanii fi foonii kennuu (Livestock Farming License)",
+      "Heyyama gahuumsa ogeessota leenjii suphaa Meeshaalee elektirooniksii fi kompitaraa Kennuu fi Haaromsuu (Electronics/Computer Repair Technician License)",
+      "Hayyama diriirsa bu'uuraalee teknolojii qunnamtii odeeffannoo - Network fi CCTV hojjachuu kennuu fi haaromsuu (Network & CCTV Installation License)",
+      "Heyyama gahuumsa ogeessota daldala Meeshaalee elektirooniksii kennuu fi haaromsuu (Electronics Trade Professional License)",
+      "Heyyama gahuumsa ogeessota suphaa Meeshaalee elektirooniksii Kennuu fi Haaromsuu (Electronics Repair Professional License)",
+      "Hayyama Ejensii dhuunfaa hojii fi hojjetaa biyyaa keessaa wal quunamsiisuu kennuu (Private Employment Agency License)",
+      "Hayyama Ejensii wal quunamsiisuu haaressuu (Agency License Renewal)",
+      "Hayyama Ejensii wal quunamsiisuu addaan cite itti fufsiisuu (Agency License Reinstatement)",
+      "Hayyama Ejensii bade bakka buusuu (Agency License Replacement)",
+      "Restore Licenses & release security deposit",
+      "Hayyama Ejensii haquu (Agency License Cancellation)",
+      "Hayyama waldaalee hawaasa aadda addaa kennu fi haaromsuu (Social Association License)",
+      "Waldiddaa dhimma hojjataaf hojjachiisaa jidduu jiru keessuumeessuu (Labour Dispute Handling)"
+    ]
+  },
+  {
+    id: 7,
+    name: "Fooddaa 7ffaa",
+    nameEN: "Window 7",
+    title: "Sanadoota Sivilii fi Waliigaltee",
+    titleEN: "Civil Documents & Agreements",
+    titleAM: "የሲቪል ሰነዶች እና ስምምነቶች",
+    color: "indigo",
+    services: [
+      "Waldaalee lafa mana jireenyaa Gurmaa'aniif qaama seerummaa kennuu fi haquu (Housing Cooperative Legal Status)",
+      "Waliigaltee kiraa mana mootummaa raawwachu (Government House Rent Agreement)",
+      "Waliigaltee kireessaafi kireeffataa mirkaneessuu (Mana dhuunfaa) (Private House Rent Verification)",
+      "Walii galtee gamoo Waliinii raawwachuu fi qaama 3ffaatti dabarsuu (Joint Building Agreement)",
+      "Mallattoo maxxantuu (boolloo) waggaa haaromsuu (Annual Seal/Stamp Renewal)",
+      "Dhorka konkolaataa raawwachuu fi haquu (Vehicle Ban/Lift)",
+      "Galmeessa ragaa dhuunfaa Fooyyessuu, dhorkuu fi kaasuu (Private Record Amendment/Block/Unblock)",
+      "Ragaalee konkolaataa badan haaraan bakka buusuu (Lost Vehicle Document Replacement)",
+      "Jijjiirraa maqaa abbaa qabeenyummaa raawwachu (Vehicle Ownership Transfer)",
+      "Hayyama tajaajila geejibaa ykn haaromsa eeyyama waldaa (Transportation Service License or Renewal)",
+      "Galmeessaa Sanadoota Sivilii (Civil Document Registration Service)",
+      "Mirkaneessa Sadadoota Sivilii (Civil Document Authentication Service)",
+      "Barreefama hundeefamaa daldala dhuunfaa PLC (Private Limited Company Establishment)",
+      "Galmeesssa Waldaalee IMX SME (Small and Micro Enterprise Registration)",
+      "Ragaalee waldaalee galmeessuu fi mirkaneessu (Association Document Registration & Authentication)",
+      "Walii galtee galmeessuu fi mirkaneessuu (Agreement Registration - Sale, Gift, Equipment Rental)",
+      "Galmeessa waliigaltee Liqii (Loan Agreement Registration)",
+      "Mirkaneessa hiikaa afaanii/turjumaanaa kennuu (Translation/Interpretation Authentication)",
+      "Bakka bu'ummaa galmeessuuu fi kennuu (Special Power of Agency)",
+      "Mirkaneessa Gurmii Waldaale Hojii Gamtaa (Approval of Cooperative Organizations)"
+    ]
+  },
+  {
+    id: 8,
+    name: "Fooddaa 8ffaa",
+    nameEN: "Window 8",
+    title: "Tajaajila Invastimantii",
+    titleEN: "Investment Services",
+    titleAM: "የኢንቨስትመንት አገልግሎቶች",
+    color: "amber",
+    services: [
+      "Simannaa Piroojektoota invastimantii (Investment Project Reception)",
+      "Hayyama invastimantii kennuu (Haaraa, Haaromsu, Bakka Buusuu) (Investment License - New, Renewal, Replacement)",
+      "Waliigaltee piroojektii investimantii Haaraa Mallatteessuu (New Investment Project Agreement Signing)",
+      "Tajaajila Hayyama Jajjabeessituu Invastimantii Kennuu (Investment Incentive License)",
+      "Piroojektii investimantii Babal'insa / Expansion (Investment Project Expansion)",
+      "Jijjiirraa gosaa Piroojektii investimantii (Investment Project Type Change)",
+      "Mirkaneessa Qorannoo haalaa dhiibbaa Naannoo (Environmental Impact Assessment)",
+      "TOR Qorannoo Eegumsa Nannoo Mirkaneessuu (Environmental Protection TOR Approval)",
+      "Odiitii dhiibbaa Naannoo gaggeessuu (Environmental Impact Audit)"
+    ]
+  },
+  {
+    id: 9,
+    name: "Fooddaa 9ffaa",
+    nameEN: "Window 9",
+    title: "Tajaajila Lafaa fi Qabiyyee",
+    titleEN: "Land & Property Services",
+    titleAM: "የመሬት እና ንብረት አገልግሎቶች",
+    color: "pink",
+    services: [
+      "Komii Waldiddaa Lafaa Simachuu fi Hiikuu (Land Dispute Complaint Resolution)",
+      "Galmeessaa fi Kenna Kaartaa qabbiyyee (Land Holding Card Registration & Issuance)",
+      "Qulqulleessa Sanadaa fi Waraqaa Ragaa Qulqullinaa Kennuu (Document Clearance)",
+      "Wabummaa Kuusan walqabsiisuu / Registration of supportive letter",
+      "Jijjiirraa maqaa raawwachuu (Bittaa fi Gurgurtaa, Kenna, Dhaaltummaa) (Name Transfer)",
+      "Dhorka Mana Murtii Haquu (Cancellation of Court Injunction)",
+      "Qabiyyee walitti makuu (Merge Parcel)",
+      "Qabiyyee Adda Quuduu (Parcel Split)",
+      "Walii galtee Liizii Galmeessuu (Lease Agreement Registration)",
+      "Sirreeffama Qabiyyee sirreessuu (Property Correction)",
+      "Tilmaama Qabiyyee Raawwachuu (Property Valuation)",
+      "Sanada bade bakka buusuu fi seera qabeessumma qabiyyee mirkaneessuu (Lost Document Replacement)",
+      "Gaaffii lafaa simachuu (Land Request Registration)",
+      "Jijiiirraa itti fayyadama lafaa / zoning (Land Use Change)",
+      "Jijjirraa Itti Fayyadama Lafaa fi Gosa Pirojektii (Land Use & Project Type Change)",
+      "Galmeeessa fi Waraqaa Ragaa Kennuu Manneen Waliinii fi Qusannoo (Condominium Registration)",
+      "Jijjirraa maqaa Raawwachuu - Kaadastara (Cadastre Name Transfer)",
+      "Bakka Bu'ummaa kuusaan walqabsiisuu (Registration of Representative Document)",
+      "Galmeessaa fi Kenna Kaartaa Dijitaalaa (Digital Card Registration & Issuance)",
+      "Walii galtee Liizii Haaromsuu (Lease Agreement Renewal)",
+      "Galmeessa Ragaa Dhorkuu, Fooyyessuu fi Kaasuu (Record Block/Amendment/Unblock)"
+    ]
+  },
+  {
+    id: 10,
+    name: "Fooddaa 10ffaa",
+    nameEN: "Window 10",
+    title: "Sassabbii Galii fi Gibiraa",
+    titleEN: "Revenue & Tax Collection",
+    titleAM: "ገቢ እና ታክስ ስብስብ",
+    color: "primary",
+    services: [
+      "Lakkoofsa kaffalaa Gibiraa - TIN (Tax Identification Number)",
+      "Sassabbii galii Idilee (Regular Revenue Collection)",
+      "Sassaabbii galii M/Qopheessaa (Withholding Revenue Collection)",
+      "Murtii Gibiraa, kaffaltii VAT, TOT fi withholding galmeessuu (Tax Assessment - VAT, TOT, Withholding)",
+      "Deggersa maxxansa nagahee kafaalaa gibiraa kennuu (Tax Receipt Printing Support)",
+      "Cost sharing clearance",
+      "Waraqaa qulqullina idaa irraa bilisa ta'u ibsu (Debt Clearance Certificate)",
+      "Gabaasa ooditii (Audit Report)",
+      "Herreega galii (Revenue Accounting)",
+      "Gumaataa fi galii buusaa gonofaa sassaabuu (Voluntary Contribution Collection)",
+      "Sassabbii galii Abba Alangaa (Legal Affairs Revenue Collection)",
+      "Sassaabii galii geejjibaa raawwachuu (Transport Revenue Collection)",
+      "Galii Bishaan dhugaatii (Drinking Water Revenue)"
+    ]
+  },
+  {
+    id: 11,
+    name: "Fooddaa 11ffaa",
+    nameEN: "Window 11",
+    title: "Kanfaltii fi Tajaajila Addaa",
+    titleEN: "Payment & Special Services",
+    titleAM: "ክፍያ እና ልዩ አገልግሎቶች",
+    color: "blue",
+    services: [
+      "Ogeessa Kanfaltii beenyaa (nama 2) - Compensation Payment Expert x2",
+      "Ogeessa kanfaltii projeektii (nama 2) - Project Payment Expert x2",
+      "Ogeessa liqii kafaamtoota misoomaa (nama 1) - Development Displaced Persons Loan Expert x1",
+      "Ogeessa Kanfaltii tajaajila addaa addaa (nama 2) - Various Service Payment Expert x2",
+      "Ogeessa bittaa fi tajaajilaa (nama 2) - Procurement & Service Expert x2"
+    ]
+  }
+];
