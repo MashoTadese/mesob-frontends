@@ -15,6 +15,15 @@ const BASE = process.env.REACT_APP_API_URL
 
 const API = BASE + '/api';
 
+// ── Build correct image URL (handles both old and new paths) ──
+function imgUrl(imageUrl) {
+  if (!imageUrl) return '';
+  // Already a full URL
+  if (imageUrl.startsWith('http')) return imageUrl;
+  // Both /uploads/... and /admin/uploads/... resolve via the backend
+  return BASE + imageUrl;
+}
+
 // ── pick the right language field ──────────────────────────
 function pick(item, field, lang) {
   const suffix = lang === 'am' ? 'AM' : lang === 'or' ? 'OR' : 'EN';
@@ -43,8 +52,8 @@ const NewsModal = ({ item, lang, onClose }) => {
     >
       <motion.div
         initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
-        className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden"
-        style={{ maxHeight: '90vh' }}
+        className="bg-white rounded-3xl w-full shadow-2xl overflow-hidden"
+        style={{ maxWidth: item.type === 'image' ? '860px' : '640px', maxHeight: '92vh' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -71,11 +80,16 @@ const NewsModal = ({ item, lang, onClose }) => {
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto" style={{ maxHeight: 'calc(90vh - 120px)' }}>
+        <div className="overflow-y-auto" style={{ maxHeight: 'calc(92vh - 120px)' }}>
+          {/* Full image display */}
           {item.type === 'image' && item.imageUrl && (
-            <div className="w-full overflow-hidden" style={{ maxHeight: '320px' }}>
-              <img src={BASE + item.imageUrl} alt={title}
-                className="w-full object-cover" style={{ maxHeight: '320px' }} />
+            <div className="w-full bg-gray-50">
+              <img
+                src={imgUrl(item.imageUrl)}
+                alt={title}
+                className="w-full h-auto block"
+                style={{ maxHeight: '65vh', objectFit: 'contain', margin: '0 auto', display: 'block', background: '#f8f9fc' }}
+              />
             </div>
           )}
 
@@ -141,7 +155,7 @@ const NewsCard = ({ item, lang, onClick, index }) => {
       {/* Image thumbnail */}
       {item.type === 'image' && item.imageUrl && (
         <div className="w-full h-44 overflow-hidden">
-          <img src={BASE + item.imageUrl} alt={title}
+          <img src={imgUrl(item.imageUrl)} alt={title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
         </div>
       )}

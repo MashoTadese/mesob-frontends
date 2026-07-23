@@ -63,7 +63,17 @@ const ComplaintSection = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setValues((p) => ({ ...p, [name]: type === 'checkbox' ? checked : value }));
+    const newValue = type === 'checkbox' ? checked : value;
+    setValues((p) => {
+      const updated = { ...p, [name]: newValue };
+      // When anonymous is checked, clear personal fields
+      if (name === 'anonymous' && checked) {
+        updated.fullName = '';
+        updated.email    = '';
+        updated.phone    = '';
+      }
+      return updated;
+    });
     if (errors[name]) setErrors((p) => ({ ...p, [name]: '' }));
   };
 

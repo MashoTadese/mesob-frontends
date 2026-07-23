@@ -369,21 +369,21 @@ export const FAQS = [
   },
 ];
 
-// Contact information
+// Contact information — defaults (overridden by admin panel via API)
 export const CONTACT_INFO = {
-  address: 'Churchill Avenue, Kirkos Sub-City, Addis Ababa, Ethiopia',
+  address: 'Sululta, Oromia, Ethiopia',
   phone: '+251 11 551 2345',
   phone2: '+251 11 551 6789',
   email: 'info@mesob.gov.et',
   emailSupport: 'support@mesob.gov.et',
   hours: 'Mon–Fri: 8:00 AM – 5:00 PM',
   hoursSat: 'Saturday: 8:00 AM – 12:00 PM',
-  mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31730.34826984148!2d38.7468!3d9.0354!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85cef5ab402d%3A0x8467b6b037a24d49!2sAddis%20Ababa!5e0!3m2!1sen!2set!4v1700000000000!5m2!1sen!2set',
+  mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3937.2!2d38.7744!3d9.1741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b8!2sSululta!5e0!3m2!1sen!2set!4v1700000000000!5m2!1sen!2set',
   social: {
     facebook: 'https://facebook.com/mesob',
-    twitter: 'https://twitter.com/mesob',
+    twitter:  'https://twitter.com/mesob',
     telegram: 'https://t.me/mesob',
-    youtube: 'https://youtube.com/mesob',
+    youtube:  'https://youtube.com/mesob',
   },
 };
 

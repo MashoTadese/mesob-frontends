@@ -1,15 +1,25 @@
+// ============================================================
 // MESOB - Organizations Section
+// Static data from constants.js
+// ============================================================
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { FaFileContract, FaGlobe, FaCoins, FaIndustry, FaMapMarked, FaBalanceScale, FaHandsHelping, FaBriefcase, FaArrowRight, FaCheckCircle, FaSearch, FaPhoneAlt, FaTimes } from 'react-icons/fa';
+import {
+  FaFileContract, FaGlobe, FaCoins, FaIndustry, FaMapMarked,
+  FaBalanceScale, FaHandsHelping, FaBriefcase, FaBuilding,
+  FaArrowRight, FaCheckCircle, FaSearch, FaPhoneAlt, FaTimes,
+} from 'react-icons/fa';
 import { ORGANIZATIONS, COLOR_MAP } from '../utils/constants';
 
-const ICON_MAP = { FaFileContract, FaGlobe, FaCoins, FaIndustry, FaMapMarked, FaBalanceScale, FaHandsHelping, FaBriefcase };
+const ICON_MAP = {
+  FaFileContract, FaGlobe, FaCoins, FaIndustry, FaMapMarked,
+  FaBalanceScale, FaHandsHelping, FaBriefcase, FaBuilding,
+};
 
 const OrgModal = ({ org, onClose }) => {
   const { t } = useTranslation();
-  const Icon = ICON_MAP[org.icon] || FaFileContract;
+  const Icon   = ICON_MAP[org.icon] || FaBuilding;
   const colors = COLOR_MAP[org.color] || COLOR_MAP.primary;
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -27,7 +37,8 @@ const OrgModal = ({ org, onClose }) => {
             <span className={`badge ${colors.badge} text-xs font-bold mb-1`}>{org.shortName}</span>
             <h3 className="text-lg font-bold text-dark font-heading leading-tight">{org.name}</h3>
           </div>
-          <button onClick={onClose} className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-colors flex-shrink-0">
+          <button onClick={onClose}
+            className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-colors flex-shrink-0">
             <FaTimes className="w-4 h-4" />
           </button>
         </div>
@@ -57,7 +68,7 @@ const OrgModal = ({ org, onClose }) => {
 
 const OrganizationsSection = () => {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
+  const [search,   setSearch]   = useState('');
   const [selected, setSelected] = useState(null);
 
   const filtered = ORGANIZATIONS.filter((o) =>
@@ -77,7 +88,6 @@ const OrganizationsSection = () => {
           <p className="section-subtitle">{t('organizations.subtitle')}</p>
         </div>
 
-        {/* Search */}
         <div className="relative max-w-xl mx-auto mb-10">
           <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input type="search" placeholder={t('organizations.searchPlaceholder')} value={search}
@@ -89,11 +99,14 @@ const OrganizationsSection = () => {
         {filtered.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {filtered.map((org, index) => {
-              const Icon = ICON_MAP[org.icon] || FaFileContract;
+              const Icon   = ICON_MAP[org.icon] || FaBuilding;
               const colors = COLOR_MAP[org.color] || COLOR_MAP.primary;
               return (
-                <motion.div key={org.id} initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: index * 0.05 }}
-                  onClick={() => setSelected(org)} className="card border border-gray-100 hover:border-primary-200 hover:-translate-y-1 transition-all cursor-pointer group overflow-hidden"
+                <motion.div key={org.id}
+                  initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ duration: 0.45, delay: index * 0.05 }}
+                  onClick={() => setSelected(org)}
+                  className="card border border-gray-100 hover:border-primary-200 hover:-translate-y-1 transition-all cursor-pointer group overflow-hidden"
                   role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setSelected(org)}>
                   <div className={`h-1.5 ${colors.bg} group-hover:bg-primary transition-colors`} />
                   <div className="p-5">

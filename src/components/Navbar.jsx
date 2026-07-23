@@ -121,7 +121,7 @@ const Navbar = () => {
     { label: t('nav.contact'),       id: 'contact' },
   ];
   useEffect(() => {
-    const ids = ['home', 'services', 'about', 'organizations', 'news', 'track', 'faq', 'contact'];
+    const ids = ['home', 'about', 'services', 'organizations', 'news', 'faq', 'complaint', 'contact'];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

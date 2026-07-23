@@ -1,10 +1,13 @@
 // MESOB - About Section
-import React from 'react';
+// About text loaded from API (admin can update via admin panel)
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FaBullseye, FaEye, FaHandshake, FaCheckCircle, FaStar } from 'react-icons/fa';
 import { STATISTICS } from '../utils/constants';
 import directorPhoto from '../assets/Image/Director/Deraje Dhaba.jpg';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const scrollTo = (id) => {
   const el = document.getElementById(id);
@@ -13,6 +16,25 @@ const scrollTo = (id) => {
 
 const AboutSection = () => {
   const { t } = useTranslation();
+  const [apiContent, setApiContent] = useState(null);
+
+  // Fetch admin-set content from API
+  useEffect(() => {
+    fetch(API_URL + '/content')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.success && data.data) setApiContent(data.data);
+      })
+      .catch(function() {});
+  }, []);
+
+  // Use API content if available, fall back to i18n
+  const para1      = (apiContent && apiContent.about_para1) || t('aboutPage.para1');
+  const para2      = (apiContent && apiContent.about_para2) || t('aboutPage.para2');
+  const para3      = (apiContent && apiContent.about_para3) || t('aboutPage.para3');
+  const highlights = (apiContent && apiContent.highlights && apiContent.highlights.length)
+    ? apiContent.highlights
+    : [t('aboutPage.highlight1'), t('aboutPage.highlight2'), t('aboutPage.highlight3'), t('aboutPage.highlight4')];
 
   const leadership = [
     { name: 'Ato Derajje Dhaba',    title: 'Branch Director',            initials: 'DD', color: '#1E3578', photo: directorPhoto },
@@ -44,11 +66,11 @@ const AboutSection = () => {
         {/* Intro + Stats */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center mb-16">
           <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <p className="text-gray-600 leading-relaxed mb-4">{t('aboutPage.para1')}</p>
-            <p className="text-gray-600 leading-relaxed mb-4">{t('aboutPage.para2')}</p>
-            <p className="text-gray-600 leading-relaxed mb-8">{t('aboutPage.para3')}</p>
+            <p className="text-gray-600 leading-relaxed mb-4">{para1}</p>
+            <p className="text-gray-600 leading-relaxed mb-4">{para2}</p>
+            <p className="text-gray-600 leading-relaxed mb-8">{para3}</p>
             <div className="flex flex-col gap-3">
-              {[t('aboutPage.highlight1'), t('aboutPage.highlight2'), t('aboutPage.highlight3'), t('aboutPage.highlight4')].map((item, i) => (
+              {highlights.map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <FaCheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
                   <span className="text-gray-600 text-sm">{item}</span>

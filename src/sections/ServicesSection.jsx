@@ -2,9 +2,10 @@
 // MESOB - Services Section
 // Window cards → click window → see services
 // Click a service → see requirements, steps, fee, time
+// Data loaded from API (admin-editable), falls back to static file
 // ============================================================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../context/LanguageContext';
@@ -13,10 +14,13 @@ import {
   FaMapMarkedAlt, FaChartLine, FaFileSignature, FaEnvelopeOpenText,
   FaCog, FaUserCheck, FaBuilding, FaMoneyBillWave,
   FaCheckCircle, FaTimes, FaArrowLeft, FaClock,
-  FaMoneyBill, FaListOl, FaClipboardList,
+  FaMoneyBill, FaListOl, FaClipboardList, FaSpinner,
 } from 'react-icons/fa';
-import { SERVICE_WINDOWS } from '../utils/windows';
+import { SERVICE_WINDOWS as STATIC_WINDOWS } from '../utils/windows';
 import { getRequirements } from '../utils/requirements';
+import Button from '../components/Button';
+
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const WINDOW_ICONS = {
   1: <FaIdCard className="w-7 h-7 text-white" />,
@@ -32,36 +36,56 @@ const WINDOW_ICONS = {
   11: <FaCog className="w-7 h-7 text-white" />,
 };
 
-
-
-
+// Extract display text for a service string based on language
 const getServiceText = (svc, lang) => {
-  const match = svc.match(/\(([^)]+)\)$/);
-  const en = match ? match[1] : svc;
-  return lang === 'or' ? svc : en;
+  if (lang === 'or') return svc;
+  // Format 2: "Oromo (qualifier) - English description"
+  const dashIdx = svc.lastIndexOf(' - ');
+  if (dashIdx !== -1) {
+    const afterDash = svc.slice(dashIdx + 3).trim();
+    if (!afterDash.includes(')')) return afterDash;
+  }
+  // Format 1: "Oromo text (English text)"
+  const lastOpen = svc.lastIndexOf('(');
+  const lastClose = svc.lastIndexOf(')');
+  if (lastOpen !== -1 && lastClose > lastOpen) {
+    return svc.slice(lastOpen + 1, lastClose).trim();
+  }
+  return svc;
+};
+
+// Extract English name for requirements lookup
+const getEN = (svc) => {
+  const dashIdx = svc.lastIndexOf(' - ');
+  if (dashIdx !== -1) {
+    const afterDash = svc.slice(dashIdx + 3).trim();
+    if (!afterDash.includes(')')) return afterDash;
+  }
+  const lastOpen = svc.lastIndexOf('(');
+  if (lastOpen === -1) return svc;
+  const lastClose = svc.lastIndexOf(')');
+  if (lastClose <= lastOpen) return svc;
+  return svc.slice(lastOpen + 1, lastClose).trim();
 };
 
 // ── Service Requirements Detail View ──
-const ServiceDetail = ({ serviceName, serviceEN, onBack, onClose }) => {
+const ServiceDetail = ({ serviceName, serviceEN, onBack }) => {
   const { t } = useTranslation();
   const reqs = getRequirements(serviceEN);
 
   return (
     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }}>
 
-      {/* Navigation row */}
-      <div className="flex items-center justify-between mb-5">
-        <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:gap-2 transition-all">
-          <FaArrowLeft className="w-3 h-3" /> {t('serviceDetail.back')}
+      <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
+        <button onClick={onBack}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300">
+          <FaArrowLeft className="w-3.5 h-3.5" />
+          {t('serviceDetail.back')}
         </button>
-        <button onClick={onClose}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:opacity-90"
-          style={{ backgroundColor: '#1E3578' }}>
-          <FaTimes className="w-3 h-3" /> {t('serviceDetail.close')}
-        </button>
+        <span className="text-gray-300 text-lg">|</span>
+        <span className="text-xs text-gray-400 font-medium flex-1">{t('serviceDetail.requiredDocs')}</span>
       </div>
 
-      {/* Service name */}
       <div className="bg-primary-50 border border-primary-100 rounded-2xl p-4 mb-5">
         <p className="text-xs text-primary font-bold uppercase tracking-wider mb-1">{t('serviceDetail.serviceLabel')}</p>
         <h4 className="font-bold text-dark font-heading text-base leading-tight">{serviceEN}</h4>
@@ -72,7 +96,6 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack, onClose }) => {
 
       {reqs ? (
         <div className="flex flex-col gap-5">
-          {/* Processing time + Fee */}
           <div className="grid grid-cols-2 gap-3">
             <div className="card p-4 border border-gray-100 flex items-start gap-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#EEF1FB' }}>
@@ -94,7 +117,6 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack, onClose }) => {
             </div>
           </div>
 
-          {/* Required Documents */}
           <div className="card p-5 border border-gray-100">
             <p className="text-sm font-bold text-dark flex items-center gap-2 mb-4 font-heading">
               <FaClipboardList className="w-4 h-4 text-primary" /> {t('serviceDetail.requiredDocs')}
@@ -111,7 +133,6 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack, onClose }) => {
             </div>
           </div>
 
-          {/* Steps */}
           <div className="card p-5 border border-gray-100">
             <p className="text-sm font-bold text-dark flex items-center gap-2 mb-4 font-heading">
               <FaListOl className="w-4 h-4 text-primary" /> {t('serviceDetail.steps')}
@@ -128,7 +149,6 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack, onClose }) => {
             </div>
           </div>
 
-          {/* Visit window note */}
           <div className="text-center py-3 px-4 rounded-xl text-xs text-gray-500" style={{ backgroundColor: '#F8F9FF', border: '1px solid #EEF1FB' }}>
             📍 {t('serviceDetail.visitNote')} <strong className="text-primary">{reqs.window}</strong> {t('serviceDetail.visitNote2')}
           </div>
@@ -141,17 +161,16 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack, onClose }) => {
         </div>
       )}
 
-      {/* Bottom buttons */}
-      <div className="flex gap-2 mt-5 pt-4 border-t border-gray-100">
-        <button onClick={onBack}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all border border-gray-200 text-gray-600 hover:bg-gray-50">
-          <FaArrowLeft className="w-3 h-3" /> {t('serviceDetail.back')}
-        </button>
-        <button onClick={onClose}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg text-white transition-all hover:opacity-90"
-          style={{ backgroundColor: '#1E3578' }}>
-          <FaTimes className="w-3 h-3" /> {t('serviceDetail.close')}
-        </button>
+      <div className="mt-5 pt-4 border-t border-gray-100">
+        <Button
+          variant="outline"
+          size="sm"
+          icon={<FaArrowLeft className="w-3.5 h-3.5" />}
+          iconPosition="left"
+          onClick={onBack}
+        >
+          {t('serviceDetail.back')}
+        </Button>
       </div>
     </motion.div>
   );
@@ -164,15 +183,9 @@ const WindowModal = ({ win, onClose, lang }) => {
 
   if (!win) return null;
 
-  // Pick right title per language
   const modalTitle = lang === 'am' ? (win.titleAM || win.titleEN) :
                      lang === 'or' ? (win.title || win.titleEN) :
                      win.titleEN || win.nameEN;
-
-  const getEN = (svc) => {
-    const match = svc.match(/\(([^)]+)\)$/);
-    return match ? match[1] : svc;
-  };
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -188,19 +201,19 @@ const WindowModal = ({ win, onClose, lang }) => {
           style={{ background: 'linear-gradient(135deg, #0F1F5C, #1E3578)' }}>
           <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: 'rgba(245,196,0,0.2)', border: '1.5px solid rgba(245,196,0,0.5)' }}>
-            {WINDOW_ICONS[win.id]}
+            {WINDOW_ICONS[win.id] || <FaBuilding className="w-7 h-7 text-white" />}
           </div>
           <div className="flex-1">
             <p className="text-xs font-bold uppercase tracking-wider mb-0.5" style={{ color: '#F5C400' }}>{win.nameEN}</p>
             <h3 className="font-bold text-white font-heading text-lg leading-tight">{modalTitle}</h3>
-            <p className="text-white/60 text-xs mt-0.5">{win.services.length} {t('servicesPage.serviceCategoryLabel')}</p>
+            <p className="text-white/60 text-xs mt-0.5">{(win.services || []).length} {t('servicesPage.serviceCategoryLabel')}</p>
           </div>
           <button onClick={onClose} className="w-9 h-9 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors">
             <FaTimes className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Modal body — white background matching site theme */}
+        {/* Modal body */}
         <div className="overflow-y-auto px-7 py-5" style={{ maxHeight: 'calc(88vh - 100px)', backgroundColor: '#ffffff' }}>
           <AnimatePresence mode="wait">
             {selectedService ? (
@@ -209,7 +222,6 @@ const WindowModal = ({ win, onClose, lang }) => {
                 serviceName={selectedService.display}
                 serviceEN={selectedService.en}
                 onBack={() => setSelectedService(null)}
-                onClose={onClose}
               />
             ) : (
               <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -218,7 +230,7 @@ const WindowModal = ({ win, onClose, lang }) => {
                   {t('serviceDetail.clickHint')}
                 </p>
                 <div className="flex flex-col gap-2">
-                  {win.services.map((svc, i) => {
+                  {(win.services || []).map((svc, i) => {
                     const displayText = getServiceText(svc, lang);
                     const enText = getEN(svc);
                     const hasReqs = getRequirements(enText) !== null;
@@ -237,25 +249,13 @@ const WindowModal = ({ win, onClose, lang }) => {
                           <span className="text-sm text-gray-700 leading-relaxed group-hover:text-primary transition-colors">{displayText}</span>
                         </div>
                         {hasReqs && (
-                          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap"
-                            style={{ backgroundColor: '#1E3578', color: '#fff' }}>
-                            Requirements →
+                          <span className="text-[10px] font-semibold text-primary flex-shrink-0 whitespace-nowrap opacity-60 group-hover:opacity-100 transition-opacity">
+                            {t('serviceDetail.reqBadge')} →
                           </span>
                         )}
                       </motion.button>
                     );
                   })}
-                </div>
-
-                {/* Close button at bottom of service list */}
-                <div className="mt-4 pt-3 border-t border-gray-100 flex justify-end">
-                  <button
-                    onClick={onClose}
-                    className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg text-white transition-all hover:opacity-90"
-                    style={{ backgroundColor: '#1E3578' }}
-                  >
-                    <FaTimes className="w-3 h-3" /> Close
-                  </button>
                 </div>
               </motion.div>
             )}
@@ -271,9 +271,36 @@ const ServicesSection = () => {
   const { t } = useTranslation();
   const { currentLang } = useLanguage();
   const [selected, setSelected] = useState(null);
-  const total = SERVICE_WINDOWS.reduce((s, w) => s + w.services.length, 0);
 
-  // Pick the right title based on language
+  // Fetch windows from API (admin-editable), fall back to static file
+  const [windows, setWindows] = useState(STATIC_WINDOWS);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(API + '/services')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          // Map DB shape (windowId) back to frontend shape (id)
+          const mapped = data.data.map((w) => ({
+            id:       w.windowId,
+            name:     w.name,
+            nameEN:   w.nameEN,
+            title:    w.title,
+            titleEN:  w.titleEN,
+            titleAM:  w.titleAM,
+            services: w.services || [],
+          }));
+          setWindows(mapped);
+        }
+        // No DB data yet — keep STATIC_WINDOWS
+      })
+      .catch(() => { /* keep static defaults on error */ })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const total = windows.reduce((s, w) => s + (w.services ? w.services.length : 0), 0);
+
   const getWindowTitle = (win) => {
     if (currentLang === 'am' && win.titleAM) return win.titleAM;
     if (currentLang === 'or' && win.title) return win.title;
@@ -289,12 +316,12 @@ const ServicesSection = () => {
             {t('services.badge')}
           </span>
           <h2 className="section-title">{t('servicesPage.hero')}</h2>
-          <p className="section-subtitle">{t('servicesPage.heroSub', { count: SERVICE_WINDOWS.length, total })}</p>
+          <p className="section-subtitle">{t('servicesPage.heroSub', { count: windows.length, total })}</p>
           <div className="flex flex-wrap justify-center gap-8 mt-6">
             {[
-              { value: SERVICE_WINDOWS.length, label: t('servicesPage.windows') },
-              { value: `${total}+`, label: t('servicesPage.totalServices') },
-              { value: '8:00–5:00', label: t('servicesPage.workingDays') },
+              { value: windows.length, label: t('servicesPage.windows') },
+              { value: `${total}+`,    label: t('servicesPage.totalServices') },
+              { value: '8:00–5:00',    label: t('servicesPage.workingDays') },
             ].map((s, i) => (
               <div key={i} className="text-center">
                 <p className="text-2xl font-bold font-heading text-primary">{s.value}</p>
@@ -304,28 +331,40 @@ const ServicesSection = () => {
           </div>
         </div>
 
+        {/* Loading spinner */}
+        {loading && (
+          <div className="flex justify-center items-center py-16">
+            <FaSpinner className="w-8 h-8 text-primary animate-spin" />
+          </div>
+        )}
+
         {/* Window cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {SERVICE_WINDOWS.map((win, index) => (
-            <motion.div key={win.id}
-              initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }} transition={{ duration: 0.4, delay: index * 0.05 }}
-              onClick={() => setSelected(win)}
-              className="bg-white rounded-2xl p-6 border border-gray-100 hover:border-primary-200 hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 cursor-pointer group"
-              role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setSelected(win)}>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md" style={{ backgroundColor: '#1E3578' }}>
-                {WINDOW_ICONS[win.id] || <FaBuilding className="w-7 h-7 text-white" />}
-              </div>
-              <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-3" style={{ backgroundColor: '#FFF8E1', color: '#B8860B' }}>
-                {win.services.length} {t('servicesPage.serviceCategoryLabel')}
-              </span>
-              <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: '#1E3578' }}>{win.name.toUpperCase()}</p>
-              <h3 className="font-bold text-dark font-heading text-base leading-snug group-hover:text-primary transition-colors">
-                {getWindowTitle(win)}
-              </h3>
-            </motion.div>
-          ))}
-        </div>
+        {!loading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {windows.map((win, index) => (
+              <motion.div key={win.id || index}
+                initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-20px' }} transition={{ duration: 0.4, delay: index * 0.05 }}
+                onClick={() => setSelected(win)}
+                className="bg-white rounded-2xl p-6 border border-gray-100 hover:border-primary-200 hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 cursor-pointer group"
+                role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setSelected(win)}>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md" style={{ backgroundColor: '#1E3578' }}>
+                  {WINDOW_ICONS[win.id] || <FaBuilding className="w-7 h-7 text-white" />}
+                </div>
+                <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-3" style={{ backgroundColor: '#FFF8E1', color: '#B8860B' }}>
+                  {(win.services || []).length} {t('servicesPage.serviceCategoryLabel')}
+                </span>
+                <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: '#1E3578' }}>
+                  {(win.name || win.nameEN || '').toUpperCase()}
+                </p>
+                <h3 className="font-bold text-dark font-heading text-base leading-snug group-hover:text-primary transition-colors">
+                  {getWindowTitle(win)}
+                </h3>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
         <p className="text-center text-gray-400 text-xs mt-6">📌 {t('servicesPage.clickHint')}</p>
       </div>
 

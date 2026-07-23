@@ -9,6 +9,13 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>One Stop Service Center (MESOB) Sululta</title>
+    <!-- Prevent dark mode flash: apply theme before React mounts -->
+    <script>
+      (function() {
+        var t = localStorage.getItem('mesob_theme');
+        if (t === 'dark') document.documentElement.classList.add('dark');
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

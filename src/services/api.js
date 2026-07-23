@@ -24,6 +24,7 @@ export const complaintAPI = {
   getAll: (params)     => api.get('/complaints', { params }),
   getById: (id)        => api.get(`/complaints/${id}`),
   update: (id, data)   => api.put(`/complaints/${id}`, data),
+  delete: (id)         => api.delete(`/complaints/${id}`),
   getStats: ()         => api.get('/complaints/stats'),
 };
 
@@ -32,6 +33,7 @@ export const contactAPI = {
   submit: (data)       => api.post('/contact', data),
   getAll: (params)     => api.get('/contact', { params }),
   markRead: (id)       => api.put(`/contact/${id}/read`),
+  reply: (id, data)    => api.post(`/contact/${id}/reply`, data),
   delete: (id)         => api.delete(`/contact/${id}`),
 };
 

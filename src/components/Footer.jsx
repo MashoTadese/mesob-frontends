@@ -1,10 +1,13 @@
 // ============================================================
-// MESOB - Footer (Single Page scroll navigation)
+// MESOB - Footer
+// Contact info fetched from API (admin-updatable), falls back to constants
 // ============================================================
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaFacebookF, FaTwitter, FaTelegramPlane, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaClock, FaChevronRight } from 'react-icons/fa';
-import { CONTACT_INFO } from '../utils/constants';
+import { CONTACT_INFO as DEFAULTS } from '../utils/constants';
+
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const scrollTo = (id) => {
   const el = document.getElementById(id);
@@ -14,6 +17,28 @@ const scrollTo = (id) => {
 const Footer = () => {
   const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
+  const [info, setInfo] = useState(DEFAULTS);
+
+  // Fetch live contact info from admin panel settings
+  useEffect(() => {
+    fetch(API + '/content')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && data.data) {
+          const d = data.data;
+          setInfo({
+            address:     d.contact_address || DEFAULTS.address,
+            phone:       d.contact_phone   || DEFAULTS.phone,
+            phone2:      d.contact_phone2  || DEFAULTS.phone2,
+            email:       d.contact_email   || DEFAULTS.email,
+            hours:       d.working_hours   || DEFAULTS.hours,
+            hoursSat:    d.working_sat     || DEFAULTS.hoursSat,
+            social:      DEFAULTS.social,
+          });
+        }
+      })
+      .catch(() => { /* keep defaults */ });
+  }, []);
 
   const quickLinks = [
     { label: t('nav.home'),          id: 'home' },
@@ -26,19 +51,19 @@ const Footer = () => {
   ];
 
   const serviceLinks = [
-    { label: t('serviceNames.nationalId'),       id: 'services' },
-    { label: t('serviceNames.passportServices'), id: 'services' },
-    { label: t('serviceNames.businessLicense'),  id: 'services' },
-    { label: t('serviceNames.civilRegistration'),id: 'services' },
-    { label: t('serviceNames.taxServices'),      id: 'services' },
-    { label: t('serviceNames.documentAuth'),     id: 'services' },
+    { label: t('serviceNames.nationalId'),        id: 'services' },
+    { label: t('serviceNames.passportServices'),  id: 'services' },
+    { label: t('serviceNames.businessLicense'),   id: 'services' },
+    { label: t('serviceNames.civilRegistration'), id: 'services' },
+    { label: t('serviceNames.taxServices'),       id: 'services' },
+    { label: t('serviceNames.documentAuth'),      id: 'services' },
   ];
 
   const socialLinks = [
-    { icon: <FaFacebookF />,     href: CONTACT_INFO.social.facebook, label: 'Facebook',  bg: 'hover:bg-blue-600' },
-    { icon: <FaTwitter />,       href: CONTACT_INFO.social.twitter,  label: 'Twitter',   bg: 'hover:bg-sky-500' },
-    { icon: <FaTelegramPlane />, href: CONTACT_INFO.social.telegram, label: 'Telegram',  bg: 'hover:bg-blue-500' },
-    { icon: <FaYoutube />,       href: CONTACT_INFO.social.youtube,  label: 'YouTube',   bg: 'hover:bg-red-600' },
+    { icon: <FaFacebookF />,     href: info.social.facebook, label: 'Facebook',  bg: 'hover:bg-blue-600' },
+    { icon: <FaTwitter />,       href: info.social.twitter,  label: 'Twitter',   bg: 'hover:bg-sky-500' },
+    { icon: <FaTelegramPlane />, href: info.social.telegram, label: 'Telegram',  bg: 'hover:bg-blue-500' },
+    { icon: <FaYoutube />,       href: info.social.youtube,  label: 'YouTube',   bg: 'hover:bg-red-600' },
   ];
 
   return (
@@ -101,27 +126,27 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact — now uses live API data */}
           <div>
             <h3 className="text-white font-semibold text-base mb-5 font-heading">{t('footer.contactUs')}</h3>
             <ul className="flex flex-col gap-4">
               <li className="flex items-start gap-3">
                 <FaMapMarkerAlt className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#F5C400' }} />
-                <span className="text-sm text-gray-400 leading-relaxed">{CONTACT_INFO.address}</span>
+                <span className="text-sm text-gray-400 leading-relaxed">{info.address}</span>
               </li>
               <li className="flex items-center gap-3">
                 <FaPhoneAlt className="w-4 h-4 flex-shrink-0" style={{ color: '#F5C400' }} />
-                <a href={`tel:${CONTACT_INFO.phone}`} className="text-sm text-gray-400 hover:text-white transition-colors">{CONTACT_INFO.phone}</a>
+                <a href={`tel:${info.phone}`} className="text-sm text-gray-400 hover:text-white transition-colors">{info.phone}</a>
               </li>
               <li className="flex items-center gap-3">
                 <FaEnvelope className="w-4 h-4 flex-shrink-0" style={{ color: '#F5C400' }} />
-                <a href={`mailto:${CONTACT_INFO.email}`} className="text-sm text-gray-400 hover:text-white transition-colors">{CONTACT_INFO.email}</a>
+                <a href={`mailto:${info.email}`} className="text-sm text-gray-400 hover:text-white transition-colors">{info.email}</a>
               </li>
               <li className="flex items-start gap-3">
                 <FaClock className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#F5C400' }} />
                 <div className="text-sm text-gray-400">
-                  <p>{CONTACT_INFO.hours}</p>
-                  <p>{CONTACT_INFO.hoursSat}</p>
+                  <p>{info.hours}</p>
+                  <p>{info.hoursSat}</p>
                 </div>
               </li>
             </ul>
@@ -135,8 +160,8 @@ const Footer = () => {
             © {currentYear} One Stop Service Center (MESOB) Sululta. {t('footer.rights')}
           </p>
           <div className="flex items-center gap-5">
-            <span className="text-gray-500 text-xs">{t('footer.privacy', { defaultValue: 'Privacy Policy' })}</span>
-            <span className="text-gray-500 text-xs">{t('footer.terms', { defaultValue: 'Terms of Service' })}</span>
+            <span className="text-gray-500 text-xs">{t('footer.privacy')}</span>
+            <span className="text-gray-500 text-xs">{t('footer.terms')}</span>
             <span className="text-gray-600 text-xs">🇪🇹 {t('footer.madeIn')}</span>
           </div>
         </div>
