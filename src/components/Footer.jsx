@@ -163,6 +163,9 @@ const Footer = () => {
             <span className="text-gray-500 text-xs">{t('footer.privacy')}</span>
             <span className="text-gray-500 text-xs">{t('footer.terms')}</span>
             <span className="text-gray-600 text-xs">🇪🇹 {t('footer.madeIn')}</span>
+            <span className="text-gray-400 text-xs font-medium">
+              ⚡ Empowered by <span style={{ color: '#F5C400', fontWeight: 700 }}>Star-Tech</span>
+            </span>
           </div>
         </div>
       </div>
