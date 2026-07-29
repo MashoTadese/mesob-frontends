@@ -146,14 +146,6 @@ const Navbar = () => {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-xl' : ''}`}
       style={{ backgroundColor: '#1E3578' }} role="banner">
 
-      {/* Top bar */}
-      <div className="hidden md:block text-xs py-1.5" style={{ backgroundColor: '#0F1F5C', color: 'rgba(255,255,255,0.7)' }}>
-        <div className="section-container flex items-center justify-between">
-          <span>📞 +251 11 551 2345 &nbsp;|&nbsp; ✉ info@mesob.gov.et</span>
-          <span>{t('topbar.hours')}</span>
-        </div>
-      </div>
-
       {/* Main nav */}
       <nav className="section-container" aria-label="Main navigation">
         <div className="flex items-center justify-between h-16">

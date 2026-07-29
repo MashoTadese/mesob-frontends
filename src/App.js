@@ -50,7 +50,7 @@ function App() {
           <Route path="*" element={
             <div className="flex flex-col min-h-screen">
               <Navbar />
-              <main className="flex-1 pt-[62px] md:pt-[94px]">
+              <main className="flex-1 pt-[62px]">
                 <MainPage />
               </main>
               <Footer />

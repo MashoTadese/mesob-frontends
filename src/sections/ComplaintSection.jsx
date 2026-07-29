@@ -148,20 +148,6 @@ const ComplaintSection = () => {
           <p className="section-subtitle">{t('complaintSection.subtitle')}</p>
         </div>
 
-        {/* Info cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-          {[
-            { emoji: '🔒', title: t('complaintSection.confidential'), desc: t('complaintSection.confidentialDesc') },
-            { emoji: '⚡', title: t('complaintSection.fastResponse'), desc: t('complaintSection.fastResponseDesc') },
-            { emoji: '📊', title: t('complaintSection.tracked'), desc: t('complaintSection.trackedDesc') },
-          ].map((item, i) => (
-            <div key={i} className="card p-4 border border-gray-100 text-center">
-              <div className="text-2xl mb-2">{item.emoji}</div>
-              <p className="font-bold text-dark text-sm font-heading mb-1">{item.title}</p>
-              <p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
-        </div>
 
         {/* Form */}
         <div className="card p-8 border border-gray-100">
