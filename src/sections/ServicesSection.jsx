@@ -156,13 +156,13 @@ const getServiceText = (svc, lang, servicesEN, servicesAM, index) => {
   // 2. Afaan Oromo — always return full string
   if (lang === 'or') return svc;
   // 3. Try exact lookup in static EN map
-  const cleanSvc = svc.replace(/^\d+[\.\)]\s*/, '').trim();
+  const cleanSvc = svc.replace(/^\d+[.)]\s*/, '').trim();
   if (STATIC_EN_MAP[svc]) return lang === 'am' ? (STATIC_AM_MAP[STATIC_EN_MAP[svc]] || STATIC_EN_MAP[svc]) : STATIC_EN_MAP[svc];
   if (STATIC_EN_MAP[cleanSvc]) return lang === 'am' ? (STATIC_AM_MAP[STATIC_EN_MAP[cleanSvc]] || STATIC_EN_MAP[cleanSvc]) : STATIC_EN_MAP[cleanSvc];
   // 4. Try partial match in static EN map
   const svcLower = cleanSvc.toLowerCase();
   for (const key of Object.keys(STATIC_EN_MAP)) {
-    const keyClean = key.replace(/^\d+[\.\)]\s*/, '').toLowerCase();
+    const keyClean = key.replace(/^\d+[.)]\s*/, '').toLowerCase();
     if (svcLower.includes(keyClean.slice(0, 20)) || keyClean.includes(svcLower.slice(0, 20))) {
       const en = STATIC_EN_MAP[key];
       return lang === 'am' ? (STATIC_AM_MAP[en] || en) : en;
