@@ -13,9 +13,10 @@ export const ThemeProvider = ({ children }) => {
     return localStorage.getItem('mesob_theme') === 'dark';
   });
 
-  // On first visit — fetch admin's default theme
+  // On first visit of each session — fetch admin's default theme
   useEffect(() => {
-    var userChose = localStorage.getItem('mesob_theme_user_choice') === 'true';
+    // sessionStorage resets on new browser session — so new visitors always get admin default
+    var userChose = sessionStorage.getItem('mesob_theme_user_choice') === 'true';
     if (userChose) return;
 
     fetch(API + '/content')
@@ -44,7 +45,8 @@ export const ThemeProvider = ({ children }) => {
   }, [isDark]);
 
   const toggleTheme = () => {
-    localStorage.setItem('mesob_theme_user_choice', 'true');
+    // Mark that this visitor manually chose a theme — respect it for this session
+    sessionStorage.setItem('mesob_theme_user_choice', 'true');
     setIsDark(function(v) { return !v; });
   };
 

@@ -17,10 +17,122 @@ import {
   FaMoneyBill, FaListOl, FaClipboardList, FaSpinner,
 } from 'react-icons/fa';
 import { SERVICE_WINDOWS as STATIC_WINDOWS } from '../utils/windows';
-import { getRequirements } from '../utils/requirements';
+import { getRequirements as getRequirementsStatic } from '../utils/requirements';
 import Button from '../components/Button';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+// Build a static EN lookup from windows.js (always available, no API needed)
+// Maps each Oromo service string → English name
+const STATIC_EN_MAP = {};
+STATIC_WINDOWS.forEach((w) => {
+  (w.services || []).forEach((svc) => {
+    const dashIdx = svc.lastIndexOf(' - ');
+    if (dashIdx !== -1) {
+      const after = svc.slice(dashIdx + 3).trim();
+      if (!after.includes(')')) { STATIC_EN_MAP[svc] = after; return; }
+    }
+    const lo = svc.lastIndexOf('('), lc = svc.lastIndexOf(')');
+    if (lo !== -1 && lc > lo) { STATIC_EN_MAP[svc] = svc.slice(lo + 1, lc).trim(); return; }
+    STATIC_EN_MAP[svc] = svc;
+  });
+});
+
+// Also map Excel raw Oromo strings → English (these come from the DB seed)
+// Pattern: partial Oromo text → English equivalent
+const EXCEL_OR_TO_EN = {
+  'Xalayaa deggarsaa adda addaa walitti hidhamiinsa gabaa oomisha qonnaa fi industrii uumuu daldaltootaaf kennuu': 'Support Letter for Traders - Market Linkage',
+  'Inshuraansii fayyaa hawaasaa kennuu': 'Community Health Insurance Issuance',
+  'Inshuraansii fayyaa hawaasaa haaromsuu': 'Community Health Insurance Renewal',
+  'Deeggersa wldaalee IMX paakeejiwwan deggersaa akka argatan haala mijeessu': 'IMX Association Support Packages',
+  "waldaalee IMX Investimentiitti ce'aniif waraqaa ragaa kennuu": 'Certificate for IMX to Investment',
+  'Deggersa aaddaa addaa waldaalee fi walitti hidhamiinsa gabaa WHG uumu kennuu': 'Various Support Letters',
+  'Xalayaa deeggarsaa adda addaa kennuu': 'Various Support Letters',
+  'Xalayaa deeggarsa adda addaa kennuu': 'Various Support Letters',
+  'Deeggarsa Hayyama barjaalee kennuu': 'Billboard License Support',
+  'Xalayaa hayyama beeksiisa sagalee kennuu': 'Audio Advertisement Permit Letter',
+  "Deggarsaa Qonnaan bulaa investimentiitti ce'uu fi W/hidhaminsa gabaa kennuu": 'Farmer Investment Transition Support',
+  "Xalayaa Deeggarsaa Kaafamtoota Misoomaa Invastimantii ce'anii fi dhimmota biroof kennuu": 'Displaced Persons Investment Support Letter',
+  'Xalayaa Deegarsa Barsiisoota fi Hoggantoota': 'Support Letter for Teachers & Managers',
+  "Deegarsa Bu'uuraalee Misooma (Ibsaa,Daandii ,Bishaanii)Kennuu": 'Infrastructure Support - Electricity, Road, Water',
+  'Komii adda addaa keessuumeessuu': 'Various Complaints Handling',
+  'Iyyannoo adda addaa keessuumeessuu': 'Various Petitions Handling',
+  'Komii hojjattoota mootummaa Keessumeessuu': 'Government Employees Complaints',
+  'Komii kaafamtoota Misoomaa Hiikuu': 'Development Displaced Persons Complaint Resolution',
+  'Tajaajila jijjiirraa barsiisotaa/hooggantoota manneen barnootaa': 'Teacher/School Manager Transfer',
+  'Ragaa barnootaa sadarkaa naannoo (kutaa 6ffaa fi 8ffaa) bade kennuu': 'Lost Regional Certificate Grade 6 & 8',
+  'Hayyama Gahumsa Manneen Barnoota Dhuunfaa fi miti mootummaa Kennuu, Haaromsuu, Kan bade bakka buusuufi deebisuu (Mana Barnootaa BSTDfi sadarkaa tokkoffaa 1-8)': 'Private/NGO School License',
+  'Hayyama suphaa mana mootummaa kennuu': 'Government House Repair Permit',
+  'Kaffaltii kiraa mana mootummaa fi dhuunfaa raawwachiisuu': 'Govt/Private House Rent Payment',
+  'Heyyamaa Tajaajila Qalmaa Kennuu(Lakk.Qeera Kennuu)': 'Slaughter Service License',
+  'Hayyama manneen yaalaa dhuunfaa kennuu': 'Private Clinic License Issuance',
+  'Hayyama manneen yaalaa dhuunfaa haaromsuu': 'Private Clinic License Renewal',
+  'Galmee fi mirkaneessa Gahumsaa Industrii konistraakshinii (fooda booda)': 'Construction Industry Competence Registration',
+  'Waraqaa qulqullinaa gahumsa ogummaa fayyaa kennuu': 'Health Professional Competence Certificate',
+  'Waraqaa qulqullinaa gahumsa ogummaa fayyaa haaromsuu': 'Health Professional Certificate Renewal',
+  'Waraqaa qulqullinaa gahumsa dhaabbilee daldalaa kennuu': 'Commercial Establishment Competence Certificate',
+  'Waraqaa qulqullinaa gahumsa dhaabilee daldalaa haaromsuu': 'Commercial Establishment Certificate Renewal',
+  'Hayyama gahumsa ogummaa dhaabilee aadaa kennuu, haaromsuu, haquu': 'Cultural Institution Professional License',
+  'Lakkoosfa kaffalaa Gibiraa(TIN)': 'Tax Identification Number (TIN)',
+  'Sassabbii galii Idilee': 'Regular Revenue Collection',
+  'Sassaabbii galii M/Qopheessaa': 'Withholding Revenue Collection',
+  'Murtii Gibiraa, kaffaltii VAT,TOT fi withholding  galmeessuu': 'Tax Assessment - VAT, TOT, Withholding',
+  'Deggersa maxxansa nagahee  kafalaa gibiraa kennuu': 'Tax Receipt Printing Support',
+  'Cost shareing  clearance': 'Debt Clearance Certificate',
+  "Waraqaaa qulqullina idaa irraa bilisa ta'u ibsu": 'Debt Clearance Certificate',
+  'Gabaasa ooditii /Audit Report/': 'Audit Report',
+  'Herreega': 'Revenue Accounting',
+  'Gumaataa fi galii buusaa gonofaa sassaabuu': 'Voluntary Contribution Collection',
+  'sassabbii galii Abba Alangaa': 'Legal Affairs Revenue Collection',
+  'Sassaabii galii geejjibaa raawwachuu': 'Transport Revenue Collection',
+  'Galii Bishaanii dhugaatii': 'Drinking Water Revenue',
+};
+
+// Merge Excel map into static map
+Object.keys(EXCEL_OR_TO_EN).forEach((oromo) => {
+  STATIC_EN_MAP[oromo] = EXCEL_OR_TO_EN[oromo];
+  // Also map with leading numbers stripped
+  STATIC_EN_MAP[oromo.replace(/^\d+\.\s*/, '')] = EXCEL_OR_TO_EN[oromo];
+});
+
+// Amharic lookup — maps English service name → Amharic
+const STATIC_AM_MAP = {
+  'Support Letter for Traders - Market Linkage':'ለነጋዴዎች የድጋፍ ደብዳቤ','Community Health Insurance Issuance':'የጤና ኢንሹራንስ መስጠት','Community Health Insurance Renewal':'የጤና ኢንሹራንስ ማደስ','IMX Association Support Packages':'የIMX ማህበር ፓኬጆች','Certificate for IMX to Investment':'ለIMX ወደ ኢንቨስትመንት ምስክር','Various Support Letters':'ልዩ ልዩ የድጋፍ ደብዳቤዎች','Billboard License Support':'የቦርድ ፈቃድ ድጋፍ','Audio Advertisement Permit Letter':'የድምጽ ማስታወቂያ ፈቃድ','Farmer Investment Transition Support':'ለገበሬ ኢንቨስትመንት ሽግግር','Displaced Persons Investment Support Letter':'ለተፈናቀሉ ኢንቨስትመንት ድጋፍ','Support Letter for Teachers & Managers':'ለአስተማሪዎችና ሃላፊዎች ደብዳቤ','Infrastructure Support - Electricity, Road, Water':'የመሰረተ ልማት ድጋፍ','Various Complaints Handling':'ልዩ ልዩ ቅሬታዎች','Various Petitions Handling':'ልዩ ልዩ አቤቱታዎች','Government Employees Complaints':'የመንግስት ሰራተኞች ቅሬታ','Development Displaced Persons Complaint Resolution':'ለልማት ተፈናቅለው ቅሬታ','Teacher/School Manager Transfer':'የአስተማሪ ዝውውር','Lost Regional Certificate Grade 6 & 8':'የጠፋ ሰርተፊኬት','Private/NGO School License':'የግል ት/ቤት ፈቃድ','Government House Repair Permit':'የቤት ጥገና ፈቃድ','Govt/Private House Rent Payment':'የቤት ኪራይ ክፍያ','Slaughter Service License':'የፍሰቻ አገልግሎት ፈቃድ','Private Clinic License Issuance':'የግል ክሊኒክ ፈቃድ','Private Clinic License Renewal':'የግል ክሊኒክ ፈቃድ ማደስ','Design Review & Project Control':'የዲዛይን ግምገማ','Plan Coordination':'የዕቅድ ቅንጅት','Construction Industry Competence Registration':'የህንፃ ኢንዱስትሪ ብቃት ምዝገባ','Health Professional Competence Certificate':'የጤና ሙያ ብቃት','Health Professional Certificate Renewal':'የጤና ሙያ ምስክር ማደስ','Commercial Establishment Competence Certificate':'የንግድ ተቋም ብቃት','Commercial Establishment Certificate Renewal':'የንግድ ተቋም ምስክር ማደስ','Cultural Institution Professional License':'የባህል ተቋም ፈቃድ','Trade License - New, Renewal, Amendment, Cancellation':'የንግድ ፈቃድ','Trade Name Registration':'የንግድ ስም ምዝገባ','Resident ID Issuance':'የነዋሪ መታወቂያ ማውጣት','New Customer Reception & Water Bill':'አዲስ ደንበኛ የውሃ ቢል','IMX Association Legal Status':'የIMX ማህበር ህጋዊ ሁኔታ','Job Seeker Registration & Card Issuance':'የስራ ፈላጊ ምዝገባ','Job Seeker Card Renewal':'የስራ ፈላጊ ካርድ ማደስ','Driving License Renewal':'የሹፌርነት ፈቃድ ማደስ','New Driving License':'አዲስ የሹፌርነት ፈቃድ','Vehicle Deployment Permit':'የተሽከርካሪ አሰፋፈር ፈቃድ','Tax Identification Number (TIN)':'የግብር መለያ ቁጥር','Regular Revenue Collection':'መደበኛ ገቢ አሰባሰብ','Debt Clearance Certificate':'የዕዳ ነፃ ምስክር','Audit Report':'የኦዲት ሪፖርት','Revenue Accounting':'የገቢ ሒሳብ','Transport Revenue Collection':'የትራንስፖርት ገቢ','Drinking Water Revenue':'የጠጣር ውሃ ገቢ','Compensation Payment Expert x2':'ካሳ ክፍያ ባለሙያ x2','Project Payment Expert x2':'የፕሮጀክት ክፍያ ባለሙያ x2','Development Displaced Persons Loan Expert x1':'ብድር ባለሙያ x1','Various Service Payment Expert x2':'ልዩ ልዩ አገልግሎት ክፍያ ባለሙያ x2','Procurement & Service Expert x2':'የግዥ እና አገልግሎት ባለሙያ x2',
+};
+
+// Cache all DB requirements once loaded
+let DB_REQUIREMENTS = null;
+
+// Fetch all requirements from DB once, cache result
+async function fetchRequirementsDB() {
+  if (DB_REQUIREMENTS !== null) return DB_REQUIREMENTS;
+  try {
+    const res  = await fetch((process.env.REACT_APP_API_URL || 'http://localhost:5000/api') + '/requirements');
+    const data = await res.json();
+    if (data.success && data.data) {
+      DB_REQUIREMENTS = data.data; // array of requirement docs
+    } else {
+      DB_REQUIREMENTS = [];
+    }
+  } catch {
+    DB_REQUIREMENTS = [];
+  }
+  return DB_REQUIREMENTS;
+}
+
+// Look up requirements for a service — DB first, static fallback
+function getRequirementsFromCache(serviceName) {
+  if (DB_REQUIREMENTS && DB_REQUIREMENTS.length > 0) {
+    const name = serviceName.toLowerCase();
+    const found = DB_REQUIREMENTS.find((r) =>
+      r.serviceName.toLowerCase() === name ||
+      name.includes(r.serviceName.toLowerCase()) ||
+      r.serviceName.toLowerCase().includes(name)
+    );
+    if (found) return found;
+  }
+  return getRequirementsStatic(serviceName);
+}
 
 const WINDOW_ICONS = {
   1: <FaIdCard className="w-7 h-7 text-white" />,
@@ -37,21 +149,38 @@ const WINDOW_ICONS = {
 };
 
 // Extract display text for a service string based on language
-const getServiceText = (svc, lang) => {
+const getServiceText = (svc, lang, servicesEN, servicesAM, index) => {
+  // 1. Use DB language arrays if populated AND have correct translation
+  if (lang === 'am' && servicesAM && servicesAM[index] && servicesAM[index] !== svc) return servicesAM[index];
+  if (lang === 'en' && servicesEN && servicesEN[index] && servicesEN[index] !== svc) return servicesEN[index];
+  // 2. Afaan Oromo — always return full string
   if (lang === 'or') return svc;
-  // Format 2: "Oromo (qualifier) - English description"
+  // 3. Try exact lookup in static EN map
+  const cleanSvc = svc.replace(/^\d+[\.\)]\s*/, '').trim();
+  if (STATIC_EN_MAP[svc]) return lang === 'am' ? (STATIC_AM_MAP[STATIC_EN_MAP[svc]] || STATIC_EN_MAP[svc]) : STATIC_EN_MAP[svc];
+  if (STATIC_EN_MAP[cleanSvc]) return lang === 'am' ? (STATIC_AM_MAP[STATIC_EN_MAP[cleanSvc]] || STATIC_EN_MAP[cleanSvc]) : STATIC_EN_MAP[cleanSvc];
+  // 4. Try partial match in static EN map
+  const svcLower = cleanSvc.toLowerCase();
+  for (const key of Object.keys(STATIC_EN_MAP)) {
+    const keyClean = key.replace(/^\d+[\.\)]\s*/, '').toLowerCase();
+    if (svcLower.includes(keyClean.slice(0, 20)) || keyClean.includes(svcLower.slice(0, 20))) {
+      const en = STATIC_EN_MAP[key];
+      return lang === 'am' ? (STATIC_AM_MAP[en] || en) : en;
+    }
+  }
+  // 5. Extract English part from bilingual string format
   const dashIdx = svc.lastIndexOf(' - ');
   if (dashIdx !== -1) {
     const afterDash = svc.slice(dashIdx + 3).trim();
     if (!afterDash.includes(')')) return afterDash;
   }
-  // Format 1: "Oromo text (English text)"
   const lastOpen = svc.lastIndexOf('(');
   const lastClose = svc.lastIndexOf(')');
   if (lastOpen !== -1 && lastClose > lastOpen) {
     return svc.slice(lastOpen + 1, lastClose).trim();
   }
-  return svc;
+  // 6. Return cleaned string — strip leading numbers
+  return cleanSvc;
 };
 
 // Extract English name for requirements lookup
@@ -71,7 +200,22 @@ const getEN = (svc) => {
 // ── Service Requirements Detail View ──
 const ServiceDetail = ({ serviceName, serviceEN, onBack }) => {
   const { t } = useTranslation();
-  const reqs = getRequirements(serviceEN);
+  const { currentLang } = useLanguage();
+  const reqs = getRequirementsFromCache(serviceEN);
+
+  // Pick the right language field, fall back to English
+  const pickField = (reqs, field) => {
+    if (!reqs) return null;
+    const suffix = currentLang === 'am' ? 'AM' : currentLang === 'or' ? 'OR' : 'EN';
+    // Try trilingual field first, then legacy field, then English
+    return reqs[field + suffix] || reqs[field + 'EN'] || reqs[field] || null;
+  };
+
+  const processingTime = reqs ? pickField(reqs, 'processingTime') : null;
+  const fee            = reqs ? pickField(reqs, 'fee') : null;
+  const requirements   = reqs ? (pickField(reqs, 'requirements') || []) : [];
+  const steps          = reqs ? (pickField(reqs, 'steps') || []) : [];
+  const window         = reqs ? reqs.window : null;
 
   return (
     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }}>
@@ -103,7 +247,7 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack }) => {
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{t('serviceDetail.processingTime')}</p>
-                <p className="text-sm font-bold text-dark mt-0.5">{reqs.processingTime}</p>
+                <p className="text-sm font-bold text-dark mt-0.5">{processingTime}</p>
               </div>
             </div>
             <div className="card p-4 border border-gray-100 flex items-start gap-3">
@@ -112,7 +256,7 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack }) => {
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{t('serviceDetail.fee')}</p>
-                <p className="text-sm font-bold text-dark mt-0.5">{reqs.fee}</p>
+                <p className="text-sm font-bold text-dark mt-0.5">{fee}</p>
               </div>
             </div>
           </div>
@@ -122,7 +266,7 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack }) => {
               <FaClipboardList className="w-4 h-4 text-primary" /> {t('serviceDetail.requiredDocs')}
             </p>
             <div className="flex flex-col gap-2.5">
-              {reqs.requirements.map((req, i) => (
+              {requirements.map((req, i) => (
                 <div key={i} className="flex items-start gap-3 p-2.5 bg-gray-50 rounded-xl">
                   <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold text-white" style={{ backgroundColor: '#1E3578' }}>
                     {i + 1}
@@ -138,7 +282,7 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack }) => {
               <FaListOl className="w-4 h-4 text-primary" /> {t('serviceDetail.steps')}
             </p>
             <div className="flex flex-col gap-2">
-              {reqs.steps.map((step, i) => (
+              {steps.map((step, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white shadow-sm" style={{ backgroundColor: '#F5C400', color: '#0F1F5C' }}>
                     {i + 1}
@@ -150,7 +294,7 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack }) => {
           </div>
 
           <div className="text-center py-3 px-4 rounded-xl text-xs text-gray-500" style={{ backgroundColor: '#F8F9FF', border: '1px solid #EEF1FB' }}>
-            📍 {t('serviceDetail.visitNote')} <strong className="text-primary">{reqs.window}</strong> {t('serviceDetail.visitNote2')}
+            📍 {t('serviceDetail.visitNote')} <strong className="text-primary">{window}</strong> {t('serviceDetail.visitNote2')}
           </div>
         </div>
       ) : (
@@ -177,8 +321,9 @@ const ServiceDetail = ({ serviceName, serviceEN, onBack }) => {
 };
 
 // ── Window Modal ──
-const WindowModal = ({ win, onClose, lang }) => {
+const WindowModal = ({ win, onClose }) => {
   const { t } = useTranslation();
+  const { currentLang: lang } = useLanguage(); // read directly — always reactive
   const [selectedService, setSelectedService] = useState(null);
 
   if (!win) return null;
@@ -206,7 +351,15 @@ const WindowModal = ({ win, onClose, lang }) => {
           <div className="flex-1">
             <p className="text-xs font-bold uppercase tracking-wider mb-0.5" style={{ color: '#F5C400' }}>{win.nameEN}</p>
             <h3 className="font-bold text-white font-heading text-lg leading-tight">{modalTitle}</h3>
-            <p className="text-white/60 text-xs mt-0.5">{(win.services || []).length} {t('servicesPage.serviceCategoryLabel')}</p>
+            <div className="flex items-center gap-3 mt-1">
+              <p className="text-white/60 text-xs">{(win.services || []).length} {t('servicesPage.serviceCategoryLabel')}</p>
+              {win.floor && (
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                  style={{ backgroundColor: 'rgba(245,196,0,0.2)', color: '#F5C400' }}>
+                  🏢 {win.floor}
+                </span>
+              )}
+            </div>
           </div>
           <button onClick={onClose} className="w-9 h-9 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors">
             <FaTimes className="w-4 h-4" />
@@ -231,9 +384,12 @@ const WindowModal = ({ win, onClose, lang }) => {
                 </p>
                 <div className="flex flex-col gap-2">
                   {(win.services || []).map((svc, i) => {
-                    const displayText = getServiceText(svc, lang);
-                    const enText = getEN(svc);
-                    const hasReqs = getRequirements(enText) !== null;
+                    const displayText = getServiceText(svc, lang, win.servicesEN, win.servicesAM, i);
+                    // Use DB servicesEN first (most accurate), fall back to parsing the OR string
+                    const enText = (win.servicesEN && win.servicesEN[i] && win.servicesEN[i] !== svc)
+                      ? win.servicesEN[i]
+                      : getEN(svc);
+                    const hasReqs = getRequirementsFromCache(enText) !== null;
                     return (
                       <motion.button
                         key={i}
@@ -275,6 +431,23 @@ const ServicesSection = () => {
   // Fetch windows from API (admin-editable), fall back to static file
   const [windows, setWindows] = useState(STATIC_WINDOWS);
   const [loading, setLoading] = useState(true);
+  const [, setReqsLoaded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Pre-load all requirements from DB into cache on mount
+  useEffect(() => {
+    fetchRequirementsDB().then(() => setReqsLoaded(true));
+  }, []);
+
+  // Listen for search from Hero search bar
+  useEffect(() => {
+    const stored = sessionStorage.getItem('mesob_search');
+    if (stored) { setSearchQuery(stored); sessionStorage.removeItem('mesob_search'); }
+
+    const handler = (e) => setSearchQuery(e.detail || '');
+    window.addEventListener('mesob_search', handler);
+    return () => window.removeEventListener('mesob_search', handler);
+  }, []);
 
   useEffect(() => {
     fetch(API + '/services')
@@ -283,13 +456,17 @@ const ServicesSection = () => {
         if (data.success && Array.isArray(data.data) && data.data.length > 0) {
           // Map DB shape (windowId) back to frontend shape (id)
           const mapped = data.data.map((w) => ({
-            id:       w.windowId,
-            name:     w.name,
-            nameEN:   w.nameEN,
-            title:    w.title,
-            titleEN:  w.titleEN,
-            titleAM:  w.titleAM,
-            services: w.services || [],
+            id:         w.windowId,
+            name:       w.name,
+            nameEN:     w.nameEN,
+            nameAM:     w.nameAM  || '',
+            title:      w.title,
+            titleEN:    w.titleEN,
+            titleAM:    w.titleAM,
+            floor:      w.floor   || '',
+            services:   w.services   || [],
+            servicesEN: w.servicesEN || [],
+            servicesAM: w.servicesAM || [],
           }));
           setWindows(mapped);
         }
@@ -301,10 +478,25 @@ const ServicesSection = () => {
 
   const total = windows.reduce((s, w) => s + (w.services ? w.services.length : 0), 0);
 
+  // Flat list of individual matching services for search results
+  const searchResults = searchQuery.trim()
+    ? windows.flatMap((w) =>
+        (w.services || [])
+          .filter((s) => s.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map((s) => ({ svc: s, win: w }))
+      )
+    : [];
+
   const getWindowTitle = (win) => {
     if (currentLang === 'am' && win.titleAM) return win.titleAM;
     if (currentLang === 'or' && win.title) return win.title;
     return win.titleEN || win.nameEN;
+  };
+
+  // Get the window name label in current language
+  const getWindowName = (win) => {
+    if (currentLang === 'am' && win.nameAM) return win.nameAM;
+    return win.name || win.nameEN || '';
   };
 
   return (
@@ -329,6 +521,25 @@ const ServicesSection = () => {
               </div>
             ))}
           </div>
+
+          {/* Search bar inside services section */}
+          <div className="relative max-w-xl mx-auto mt-8">
+            <FaCheckCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" style={{ color: '#1E3578' }} />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t('serviceDetail.clickHint')}
+              className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-sm bg-white"
+              aria-label="Search services"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-semibold">
+                ✕ Clear
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Loading spinner */}
@@ -338,8 +549,71 @@ const ServicesSection = () => {
           </div>
         )}
 
-        {/* Window cards */}
-        {!loading && (
+        {/* Search results — flat list of matching individual services */}
+        {!loading && searchQuery.trim() && (
+          <div>
+            <p className="text-sm text-gray-500 mb-5 text-center">
+              {searchResults.length > 0
+                ? `Found ${searchResults.length} service${searchResults.length > 1 ? 's' : ''} matching "${searchQuery}"`
+                : `No services found for "${searchQuery}"`}
+            </p>
+            {searchResults.length > 0 && (
+              <div className="flex flex-col gap-3 max-w-3xl mx-auto">
+                {searchResults.map((item, i) => {
+                  const displayText = getServiceText(item.svc, currentLang, item.win.servicesEN, item.win.servicesAM, windows.flatMap(w => w.services).indexOf(item.svc));
+                  const enText      = getEN(item.svc);
+                  const hasReqs     = getRequirementsFromCache(enText) !== null;
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.03 }}
+                      className="bg-white rounded-2xl border border-gray-100 hover:border-primary-200 hover:shadow-sm transition-all overflow-hidden"
+                    >
+                      <div className="flex items-center gap-4 p-4">
+                        {/* Window icon */}
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm" style={{ backgroundColor: '#1E3578' }}>
+                          {WINDOW_ICONS[item.win.id] || <FaBuilding className="w-5 h-5 text-white" />}
+                        </div>
+                        {/* Service info */}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-dark leading-snug">{displayText}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            {item.win.nameEN} — {getWindowTitle(item.win)}
+                            {item.win.floor && <span className="ml-2">🏢 {item.win.floor}</span>}
+                          </p>
+                        </div>
+                        {/* Requirements button */}
+                        {hasReqs ? (
+                          <button
+                            onClick={() => { setSelected(item.win); }}
+                            className="text-xs font-semibold text-white px-3 py-1.5 rounded-lg flex-shrink-0 transition-all hover:opacity-90"
+                            style={{ backgroundColor: '#1E3578' }}
+                          >
+                            {t('serviceDetail.reqBadge')} →
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setSelected(item.win)}
+                            className="text-xs font-semibold px-3 py-1.5 rounded-lg flex-shrink-0 transition-all"
+                            style={{ backgroundColor: '#F8F9FF', color: '#1E3578', border: '1px solid #EEF1FB' }}
+                          >
+                            View Window →
+                          </button>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Window cards — shown when no search */}
+        {!loading && !searchQuery.trim() && (
+          <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {windows.map((win, index) => (
               <motion.div key={win.id || index}
@@ -354,8 +628,13 @@ const ServicesSection = () => {
                 <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-3" style={{ backgroundColor: '#FFF8E1', color: '#B8860B' }}>
                   {(win.services || []).length} {t('servicesPage.serviceCategoryLabel')}
                 </span>
+                {win.floor && (
+                  <span className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full mb-2 ml-1" style={{ backgroundColor: '#EEF1FB', color: '#1E3578' }}>
+                    🏢 {win.floor}
+                  </span>
+                )}
                 <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: '#1E3578' }}>
-                  {(win.name || win.nameEN || '').toUpperCase()}
+                  {getWindowName(win).toUpperCase()}
                 </p>
                 <h3 className="font-bold text-dark font-heading text-base leading-snug group-hover:text-primary transition-colors">
                   {getWindowTitle(win)}
@@ -363,13 +642,14 @@ const ServicesSection = () => {
               </motion.div>
             ))}
           </div>
+          </>
         )}
 
         <p className="text-center text-gray-400 text-xs mt-6">📌 {t('servicesPage.clickHint')}</p>
       </div>
 
       <AnimatePresence>
-        {selected && <WindowModal win={selected} onClose={() => setSelected(null)} lang={currentLang} />}
+        {selected && <WindowModal win={selected} onClose={() => setSelected(null)} />}
       </AnimatePresence>
     </section>
   );

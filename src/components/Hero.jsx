@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaArrowRight, FaCheckCircle, FaUsers, FaSearch } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../context/LanguageContext';
 
 // Import all 7 images
 import img1 from '../assets/Image/back.jpg';
@@ -23,41 +24,45 @@ const scrollTo = (id) => { const el = document.getElementById(id); if (el) { con
 // Slideshow images
 const SLIDES = [img1, img2, img3, img4, img5, img6, img7];
 
-// Rotating mottos — explain MESOB services efficiently
-const MOTTOS = [
-  {
-    headline: 'All Government Services, One Location.',
-    sub: '180+ federal services available at MESOB Sululta Branch — no more running between offices.',
-  },
-  {
-    headline: 'Your Identity. Your Rights. Simplified.',
-    sub: 'Apply for your National ID, Passport, and Civil Registration documents in minutes.',
-  },
-  {
-    headline: 'Business Registration Made Easy.',
-    sub: 'Start your business legally in days — trade licenses, tax registration, and investment permits.',
-  },
-  {
-    headline: 'Fast. Transparent. Citizen-First.',
-    sub: 'Digital queuing, real-time updates, and professional staff — serving you with dignity.',
-  },
-  {
-    headline: 'Land, Property & Legal Services.',
-    sub: 'Title deeds, land certificates, notary services, and document authentication under one roof.',
-  },
-  {
-    headline: 'Serving Sululta with Excellence.',
-    sub: 'MESOB Sululta Branch — where modern government meets the needs of every citizen.',
-  },
-  {
-    headline: 'Digital Ethiopia Starts Here.',
-    sub: 'Part of Africa\'s first unified government service platform — MESOB.',
-  },
-];
+// Rotating mottos — trilingual (EN / AM / OR)
+const MOTTOS = {
+  en: [
+    { headline: 'All Government Services, One Location.', sub: '180+ federal services available at MESOB Sululta Branch — no more running between offices.' },
+    { headline: 'Your Identity. Your Rights. Simplified.', sub: 'Apply for your National ID, Passport, and Civil Registration documents in minutes.' },
+    { headline: 'Business Registration Made Easy.', sub: 'Start your business legally in days — trade licenses, tax registration, and investment permits.' },
+    { headline: 'Fast. Transparent. Citizen-First.', sub: 'Digital queuing, real-time updates, and professional staff — serving you with dignity.' },
+    { headline: 'Land, Property & Legal Services.', sub: 'Title deeds, land certificates, notary services, and document authentication under one roof.' },
+    { headline: 'Serving Sululta with Excellence.', sub: 'MESOB Sululta Branch — where modern government meets the needs of every citizen.' },
+    { headline: 'Digital Ethiopia Starts Here.', sub: "Part of Africa's first unified government service platform — MESOB." },
+  ],
+  am: [
+    { headline: 'ሁሉም የመንግስት አገልግሎቶች፣ በአንድ ቦታ።', sub: '180+ የፌዴራል አገልግሎቶች በMESOB ሱሉልታ ቅርንጫፍ — ወደ ብዙ ቢሮዎች መሮጥ አያስፈልግም።' },
+    { headline: 'ማንነትዎ። መብትዎ። ቀለል ብሎ።', sub: 'ብሔራዊ መታወቂያ፣ ፓስፖርት እና የሲቪል ምዝገባ ሰነዶችን በደቂቃዎች ያውጡ።' },
+    { headline: 'የንግድ ምዝገባ ቀለል ብሏል።', sub: 'ንግድዎን በሕጋዊ መንገድ በቀናት ይጀምሩ — የንግድ ፈቃዶች፣ የግብር ምዝገባ እና የኢንቨስትመንት ፈቃዶች።' },
+    { headline: 'ፈጣን። ግልጽ። ዜጎችን ያማከለ።', sub: 'ዲጂታል ወረፋ፣ ወቅታዊ ዝማኔዎች እና ሙያዊ ሰራተኞች — በክብር ያገለግሉዎታል።' },
+    { headline: 'የመሬት፣ ንብረትና ህጋዊ አገልግሎቶች።', sub: 'የቦታ ሰነዶች፣ የመሬት ምስክር ወረቀቶች፣ የኖታሪ አገልግሎቶች — ሁሉም በአንድ ቦታ።' },
+    { headline: 'ሱሉልታን በልህቀት እናገለግላለን።', sub: 'MESOB ሱሉልታ ቅርንጫፍ — ዘምናዊ መንግስት ለሁሉም ዜጎች የሚቀርብበት ቦታ።' },
+    { headline: 'ዲጂታል ኢትዮጵያ ከዚህ ይጀምራል።', sub: 'የአፍሪካ የመጀመሪያ አንድ ወጥ የመንግስት አገልግሎት ፕላትፎርም አካል — MESOB።' },
+  ],
+  or: [
+    { headline: "Tajaajilota Mootummaa Hunda, Bakka Tokkotti.", sub: "Tajaajilota federaalaa 180+ MESOB Damee Sululta — biiroo hedduutti deemuun dhaabbate." },
+    { headline: "Eenyummaa Kee. Mirga Kee. Salphatti.", sub: "Eenyummaa Biyyoolessaa, Paaspoortii fi Sanadoota Sivilii daqiiqaawwan muraasa keessatti fudhattadhu." },
+    { headline: "Galmee Daldalaaf Salphaa Ta'e.", sub: "Daldalaa kee seeraan guyyoota muraasa keessatti jalqabi — hayyama daldalaa, galmee gibiraa fi hayyama invastimantii." },
+    { headline: "Ariitii. Ifa. Lammiilee Dursa Kenna.", sub: "Tartiiba dijitaalaa, haaroomsaa yeroo dhugaa fi hojjattoota ogeessota — kabajaan si tajaajilu." },
+    { headline: "Tajaajila Lafa, Qabiyyee fi Seeraa.", sub: "Waraqaalee qabeenyaa, sanadoota lafa, tajaajila notaarii — hundi bakka tokkotti." },
+    { headline: "Sululta Baayyinaan Tajaajilaa.", sub: "MESOB Damee Sululta — mootummaan ammayyaan barbaachisoo lammii hunda guutuu." },
+    { headline: "Itoophiyaan Dijitaalaan Asirraa Eegali.", sub: "Kutaa platform tajaajila mootummaa gamtaa Afriikaa keessaa jalqabaa — MESOB." },
+  ],
+};
 
 const Hero = () => {
   const { t } = useTranslation();
+  const { currentLang } = useLanguage();
   const [current, setCurrent] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Pick mottos based on current language
+  const mottos = MOTTOS[currentLang] || MOTTOS.en;
 
   // Auto-advance every 5 seconds
   useEffect(() => {
@@ -67,7 +72,25 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const motto = MOTTOS[current % MOTTOS.length];
+  const motto = mottos[current % mottos.length];
+
+  // Search: scroll to services section and store query for filtering
+  const handleSearch = () => {
+    const q = searchQuery.trim();
+    if (!q) {
+      scrollTo('services');
+      return;
+    }
+    // Store in sessionStorage so ServicesSection can read it
+    sessionStorage.setItem('mesob_search', q);
+    scrollTo('services');
+    // Dispatch event so ServicesSection can react immediately
+    window.dispatchEvent(new CustomEvent('mesob_search', { detail: q }));
+  };
+
+  const handleSearchKey = (e) => {
+    if (e.key === 'Enter') handleSearch();
+  };
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden" aria-label="Hero section">
@@ -186,11 +209,15 @@ const Hero = () => {
               <FaSearch className="w-4 h-4 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.6)' }} />
               <input
                 type="text"
-                placeholder="Search for Services and Institutions"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKey}
+                placeholder={currentLang === 'am' ? 'አገልግሎቶች እና ተቋማትን ይፈልጉ' : currentLang === 'or' ? 'Tajaajilota fi dhaabbilee barbaadi' : 'Search for Services and Institutions'}
                 className="flex-1 bg-transparent text-white placeholder-white/50 outline-none text-sm"
                 aria-label="Search services"
               />
               <button
+                onClick={handleSearch}
                 className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all hover:scale-105 font-bold"
                 style={{ backgroundColor: '#F5C400' }}
                 aria-label="Search"
@@ -208,9 +235,9 @@ const Hero = () => {
             className="flex flex-wrap gap-4 justify-center mb-10"
           >
             <button onClick={() => scrollTo("services")} className="inline-flex items-center gap-2.5 px-8 py-4 font-bold rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 text-sm" style={{ backgroundColor: "#F5C400", color: "#0F1F5C" }}>
-              Browse Services <FaArrowRight className="w-4 h-4" /></button>
+              {t('hero.bookBtn')} <FaArrowRight className="w-4 h-4" /></button>
             <button onClick={() => scrollTo("organizations")} className="inline-flex items-center gap-2.5 px-8 py-4 font-semibold rounded-2xl border-2 hover:-translate-y-0.5 transition-all duration-200 text-sm" style={{ borderColor: "rgba(255,255,255,0.4)", color: "#fff", backgroundColor: "rgba(255,255,255,0.1)" }}>
-              Our Organizations <FaArrowRight className="w-4 h-4" /></button>
+              {t('hero.exploreBtn')} <FaArrowRight className="w-4 h-4" /></button>
           </motion.div>
 
           {/* Trust badges */}

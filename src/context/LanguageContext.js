@@ -33,11 +33,12 @@ export const LanguageProvider = ({ children }) => {
     document.documentElement.setAttribute('lang', currentLang);
   }, [currentLang]);
 
-  // On every mount: if user has NOT manually chosen a language,
+  // On every mount: if user has NOT manually chosen a language IN THIS SESSION,
   // always apply whatever the admin set as the site default.
   useEffect(() => {
-    var userChose = localStorage.getItem('mesob_lang_user_choice') === 'true';
-    if (userChose) return; // respect user's manual selection
+    // Use sessionStorage so the flag resets on every new browser session
+    var userChose = sessionStorage.getItem('mesob_lang_user_choice') === 'true';
+    if (userChose) return; // respect user's manual selection this session
 
     fetch(API + '/content')
       .then(function (r) { return r.json(); })
@@ -61,8 +62,8 @@ export const LanguageProvider = ({ children }) => {
 
   const changeLanguage = useCallback(
     (langCode) => {
-      // User is actively choosing — remember their preference
-      localStorage.setItem('mesob_lang_user_choice', 'true');
+      // User is actively choosing — remember their preference for this session only
+      sessionStorage.setItem('mesob_lang_user_choice', 'true');
       localStorage.setItem('mesob_lang', langCode);
       i18n.changeLanguage(langCode);
       setCurrentLang(langCode);
