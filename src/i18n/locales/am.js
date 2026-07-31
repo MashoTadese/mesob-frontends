@@ -1,6 +1,6 @@
 const am = {
   nav: { home: "መነሻ ገጽ", about: "ስለ እኛ", services: "አገልግሎቶች", organizations: "ድርጅቶች", serviceWindows: "የአገልግሎት ዊንዶዎች", trackApp: "ማቤት ይከታተሉ", complaint: "ቅሬታ", contact: "አድራሻ", language: "ቋንቋ" },
-  topbar: { hours: "ሰኞ-አርብ: 8:00 - 5:00 | ቅዳሜ: 8:00 - 12:00" },
+  topbar: { hours: "ሰኞ-አርብ: 2:00 - 11:00 | ቅዳሜ: 2:00 - 6:00" },
   hero: { badge: "የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ", heading1: "የመንግሥት አገልግሎቶች", heading2: "በቀላሉ", heading3: "", subheading: "MESOB ሱሉልታ ቅርንጫፍ 180+ የፌዴራል አገልግሎቶች በአንድ ቦታ ያቀርባል - ፈጣን ግልጽ እና ዲጂታል", bookBtn: "አገልግሎቶችን ያስሱ", exploreBtn: "ድርጅቶቻችን", badge1: "አስተማማኝ አገልግሎት", badge2: "ዲጂታል አገልግሎቶች", badge3: "500+ ዜጎች ተሰጥቷቸዋል", portalTitle: "MESOB ፖርታል", portalSub: "ዲጂታል አገልግሎቶች", onlineStatus: "በሥራ ላይ", quickBook: "አገልግሎቶችን ይመልከቱ" },
   stats: { citizens: "የተሰጣቸው ዜጎች", services: "የሕዝብ አገልግሎቶች", organizations: "ድርጅቶች", serviceWindows: "የአገልግሎት ዊንዶዎች", trackApp: "ማቤት ይከታተሉ", complaint: "ቅሬታ", employees: "ሠራተኞች" },
   about: { badge: "ስለ MESOB", heading1: "ልህቀትን", heading2: "ማስቀደም", heading3: "በሕዝብ አገልግሎት", learnMore: "ስለ MESOB ተጨማሪ ይወቁ", mission: "ተልዕኮ", missionText: "ቀልጣፋ ግልጽ እና ዜጎችን ያማከለ አገልግሎት", vision: "ራዕይ", visionText: "ሙሉ ዲጂታልና ተጠያቂ የሆነ አገልግሎት ሥርዓት", values: "እሴቶች", valuesText: "ታማኝነት ተጠያቂነት ፈጠራና ሁሉን ያካተተ አገልግሎት", cert1: "ሙሉ ዲጂታል አገልግሎቶች", cert2: "24/7 ድጋፍ", cert3: "ባለ ብዙ ቋንቋ ድጋፍ", since: "ከጁላይ 2026 ጀምሮ ዜጎችን እናገለግላለን", para1: "MESOB ሱሉልታ ቅርንጫፍ 180+ አገልግሎቶችን ያቀርባል", para2: "ዘምናዊ ቀልጣፋ እና ግልጽ የሕዝብ አገልግሎቶች", satisfaction: "እርካታ", responseRate: "ምላሽ", estYear: "ዓ.ም" },

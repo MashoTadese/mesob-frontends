@@ -1,9 +1,9 @@
 // MESOB - About Section
 // About text loaded from API (admin can update via admin panel)
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { FaBullseye, FaEye, FaHandshake, FaCheckCircle, FaStar } from 'react-icons/fa';
+import { FaBullseye, FaEye, FaHandshake, FaCheckCircle, FaStar, FaTimes } from 'react-icons/fa';
 import { STATISTICS } from '../utils/constants';
 import directorPhoto from '../assets/Image/Director/Deraje Dhaba.jpg';
 
@@ -17,6 +17,7 @@ const scrollTo = (id) => {
 const AboutSection = () => {
   const { t } = useTranslation();
   const [apiContent, setApiContent] = useState(null);
+  const [selectedMVV, setSelectedMVV] = useState(null);
 
   // Fetch admin-set content from API
   useEffect(() => {
@@ -104,14 +105,62 @@ const AboutSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {mvv.map((item, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="text-white rounded-2xl p-8 shadow-xl relative overflow-hidden" style={item.style}>
+              className="text-white rounded-2xl p-8 shadow-xl relative overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform"
+              style={item.style}
+              onClick={() => setSelectedMVV(item)}
+              role="button" tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && setSelectedMVV(item)}
+            >
               <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #F5C400, #FFE54D)' }} />
               <div className="w-14 h-14 bg-white/15 rounded-2xl flex items-center justify-center mb-5">{item.icon}</div>
               <h3 className="text-xl font-bold font-heading mb-3">{item.label}</h3>
-              <p className="text-white/80 text-sm leading-relaxed">{item.text}</p>
+              <p className="text-white/80 text-sm leading-relaxed line-clamp-3">{item.text}</p>
+              <span className="inline-flex items-center gap-1 mt-4 text-xs font-semibold opacity-70">
+                Read more →
+              </span>
             </motion.div>
           ))}
         </div>
+
+        {/* MVV Modal */}
+        <AnimatePresence>
+          {selectedMVV && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              style={{ backgroundColor: 'rgba(15,31,92,0.7)', backdropFilter: 'blur(4px)' }}
+              onClick={() => setSelectedMVV(null)}>
+              <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+                className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden"
+                onClick={(e) => e.stopPropagation()}>
+                {/* Header */}
+                <div className="px-7 py-6 flex items-center gap-4 text-white"
+                  style={selectedMVV.style}>
+                  <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #F5C400, #FFE54D)' }} />
+                  <div className="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center flex-shrink-0">
+                    {selectedMVV.icon}
+                  </div>
+                  <h3 className="font-bold text-white text-xl font-heading flex-1">{selectedMVV.label}</h3>
+                  <button onClick={() => setSelectedMVV(null)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+                    <FaTimes className="w-4 h-4" />
+                  </button>
+                </div>
+                {/* Body */}
+                <div className="px-7 py-6">
+                  <p className="text-gray-700 leading-relaxed text-sm whitespace-pre-wrap">{selectedMVV.text}</p>
+                </div>
+                {/* Footer */}
+                <div className="px-7 py-5 border-t border-gray-100 flex justify-center">
+                  <button onClick={() => setSelectedMVV(null)}
+                    className="px-8 py-2.5 rounded-xl font-semibold text-sm text-white transition-all"
+                    style={{ backgroundColor: '#0F1F5C' }}>
+                    Close
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Leadership */}
         <div className="text-center mb-10">
@@ -122,28 +171,34 @@ const AboutSection = () => {
           <p className="section-subtitle">{t('aboutPage.leadershipSubtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
-          {leadership.map((person, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="card p-6 border border-gray-100 text-center hover:-translate-y-1 transition-transform">
-              {person.photo ? (
-                <img src={person.photo} alt={person.name} className="w-20 h-20 rounded-full mx-auto mb-4 object-cover shadow-md border-4 border-primary-100" />
-              ) : (
+        <div className="flex flex-col items-center gap-6 mb-14">
+          {/* Director — centered on top, larger */}
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
+            className="card p-8 border-2 text-center hover:-translate-y-1 transition-transform w-72"
+            style={{ borderColor: '#F5C400' }}>
+            <img src={leadership[0].photo} alt={leadership[0].name} className="w-28 h-28 rounded-full mx-auto mb-4 object-cover shadow-md border-4 border-primary-100" />
+            <h4 className="font-bold text-dark font-heading text-base mb-1">{leadership[0].name}</h4>
+            <p className="text-gray-500 text-sm mb-2">{leadership[0].title}</p>
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold"
+              style={{ backgroundColor: '#F5C400', color: '#0F1F5C' }}>
+              ★ Branch Director
+            </span>
+          </motion.div>
+
+          {/* Other team members — row below */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl">
+            {leadership.slice(1).map((person, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="card p-6 border border-gray-100 text-center hover:-translate-y-1 transition-transform">
                 <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold font-heading"
                   style={{ backgroundColor: person.color }}>
                   {person.initials}
                 </div>
-              )}
-              <h4 className="font-bold text-dark font-heading text-sm mb-1">{person.name}</h4>
-              <p className="text-gray-500 text-xs">{person.title}</p>
-              {i === 0 && (
-                <span className="inline-flex items-center gap-1 mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold"
-                  style={{ backgroundColor: '#F5C400', color: '#0F1F5C' }}>
-                  ★ Branch Director
-                </span>
-              )}
-            </motion.div>
-          ))}
+                <h4 className="font-bold text-dark font-heading text-sm mb-1">{person.name}</h4>
+                <p className="text-gray-500 text-xs">{person.title}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* CTA */}

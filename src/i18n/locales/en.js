@@ -18,7 +18,7 @@ const en = {
 
   // --- Top bar ---
   topbar: {
-    hours: 'Mon–Fri: 8:00 AM – 5:00 PM | Sat: 8:00 AM – 12:00 PM',
+    hours: 'Mon–Sat: 2:00 AM – 11:00 PM | Sat: 2:00 AM – 6:00 PM',
   },
 
   // --- Hero ---

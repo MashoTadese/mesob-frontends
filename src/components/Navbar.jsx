@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage, LANGUAGES } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import useScrollPosition from '../hooks/useScrollPosition';
+import partnerLogo from '../assets/Image/Home/logo.png';
 
 // Smooth scroll helper
 const scrollTo = (id) => {
@@ -187,6 +188,12 @@ const Navbar = () => {
             >
               {isDark ? <FaSun className="w-4 h-4" /> : <FaMoon className="w-4 h-4" />}
             </button>
+            <img
+              src={partnerLogo}
+              alt="Partner Logo"
+              className="w-9 h-9 rounded-full "
+              style={{ objectFit: 'cover' }}
+            />
           </div>
 
           {/* Mobile toggle */}

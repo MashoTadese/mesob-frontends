@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaArrowRight, FaCheckCircle, FaUsers, FaSearch } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../context/LanguageContext';
+import partnerLogo from '../assets/Image/Home/logo.png';
+import heroPicture from '../assets/Image/Home/picture.jpg';
 
 // Import all 7 images
 import img1 from '../assets/Image/back.jpg';
@@ -130,19 +132,37 @@ const Hero = () => {
       <div className="relative z-20 section-container w-full py-24 pt-36 md:pt-28">
         <div className="flex flex-col items-center text-center text-white max-w-4xl mx-auto">
 
-          {/* Fixed logo — does NOT spin, stays still on hero */}
+          {/* Logos row — new logo on left, MESOB logo in center */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="mb-7"
+            className="mb-7 flex items-center justify-center gap-6"
           >
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ boxShadow: '0 0 0 4px rgba(245,196,0,0.5)', overflow: 'hidden' }}>
+              <img
+                src={partnerLogo}
+                alt="Partner Logo"
+                className="w-full h-full rounded-full"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
             <img
               src="/logo.png"
               alt="MESOB Official Logo"
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full mx-auto"
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full"
               style={{ objectFit: 'cover', boxShadow: '0 0 0 4px rgba(245,196,0,0.5), 0 0 40px rgba(245,196,0,0.2)' }}
             />
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ boxShadow: '0 0 0 4px rgba(245,196,0,0.5), 0 0 40px rgba(245,196,0,0.2)', overflow: 'hidden' }}>
+              <img
+                src={heroPicture}
+                alt="Sululta Branch"
+                className="w-full h-full"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
           </motion.div>
 
           {/* Badge */}

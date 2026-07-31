@@ -15,13 +15,13 @@ const BASE = process.env.REACT_APP_API_URL
 
 const API = BASE + '/api';
 
-// ── Build correct image URL (handles both old and new paths) ──
+// ── Build correct image URL ──
 function imgUrl(imageUrl) {
   if (!imageUrl) return '';
-  // Already a full URL
   if (imageUrl.startsWith('http')) return imageUrl;
-  // Both /uploads/... and /admin/uploads/... resolve via the backend
-  return BASE + imageUrl;
+  // Strip leading slash and build full URL
+  const clean = imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl;
+  return BASE + clean;
 }
 
 // ── pick the right language field ──────────────────────────
@@ -81,15 +81,17 @@ const NewsModal = ({ item, lang, onClose }) => {
 
         {/* Body */}
         <div className="overflow-y-auto" style={{ maxHeight: 'calc(92vh - 120px)' }}>
-          {/* Full image display */}
+          {/* Full image display — all images */}
           {item.type === 'image' && item.imageUrl && (
             <div className="w-full bg-gray-50">
-              <img
-                src={imgUrl(item.imageUrl)}
-                alt={title}
-                className="w-full h-auto block"
-                style={{ maxHeight: '65vh', objectFit: 'contain', margin: '0 auto', display: 'block', background: '#f8f9fc' }}
-              />
+              {(item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls : [item.imageUrl]).map(function(url, i) {
+                return (
+                  <img key={i} src={imgUrl(url)} alt={title}
+                    className="w-full h-auto block"
+                    style={{ maxHeight: '65vh', objectFit: 'contain', margin: '0 auto', display: 'block', background: '#f8f9fc', borderBottom: i > 0 ? '4px solid #f0f4ff' : 'none' }}
+                  />
+                );
+              })}
             </div>
           )}
 
@@ -119,6 +121,17 @@ const NewsModal = ({ item, lang, onClose }) => {
               </div>
             )
           )}
+
+          {/* Close button at bottom */}
+          <div className="px-7 py-5 border-t border-gray-100 flex justify-center">
+            <button
+              onClick={onClose}
+              className="flex items-center gap-2 px-8 py-2.5 rounded-xl font-semibold text-sm transition-all"
+              style={{ backgroundColor: '#0F1F5C', color: '#fff' }}
+            >
+              <FaTimes className="w-3.5 h-3.5" /> Close
+            </button>
+          </div>
         </div>
       </motion.div>
     </motion.div>
@@ -152,11 +165,18 @@ const NewsCard = ({ item, lang, onClick, index }) => {
       role="button" tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
     >
-      {/* Image thumbnail */}
+      {/* Image thumbnail — show first image with count badge */}
       {item.type === 'image' && item.imageUrl && (
-        <div className="w-full h-44 overflow-hidden">
-          <img src={imgUrl(item.imageUrl)} alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        <div className="w-full h-44 overflow-hidden relative">
+          <img src={imgUrl(item.imageUrls && item.imageUrls[0] ? item.imageUrls[0] : item.imageUrl)} alt={title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            style={{ objectPosition: 'center 20%' }} />
+          {item.imageUrls && item.imageUrls.length > 1 && (
+            <span className="absolute bottom-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(0,0,0,0.6)', color: '#fff' }}>
+              +{item.imageUrls.length - 1} more
+            </span>
+          )}
         </div>
       )}
 
