@@ -20,36 +20,36 @@ api.interceptors.request.use((config) => {
 
 // ── Complaint API ──
 export const complaintAPI = {
-  submit: (data)       => api.post('/complaints', data),
-  getAll: (params)     => api.get('/complaints', { params }),
-  getById: (id)        => api.get(`/complaints/${id}`),
-  update: (id, data)   => api.put(`/complaints/${id}`, data),
-  delete: (id)         => api.delete(`/complaints/${id}`),
-  getStats: ()         => api.get('/complaints/stats'),
+  submit: (data)     => api.post('/complaints', data),
+  getAll: (params)   => api.get('/complaints', { params }),
+  getById: (id)      => api.get(`/complaints/${id}`),
+  update: (id, data) => api.put(`/complaints/${id}`, data),
+  delete: (id)       => api.delete(`/complaints/${id}`),
+  getStats: ()       => api.get('/complaints/stats'),
 };
 
 // ── Contact API ──
 export const contactAPI = {
-  submit: (data)       => api.post('/contact', data),
-  getAll: (params)     => api.get('/contact', { params }),
-  markRead: (id)       => api.put(`/contact/${id}/read`),
-  reply: (id, data)    => api.post(`/contact/${id}/reply`, data),
-  delete: (id)         => api.delete(`/contact/${id}`),
+  submit: (data)     => api.post('/contact', data),
+  getAll: (params)   => api.get('/contact', { params }),
+  markRead: (id)     => api.put(`/contact/${id}/read`),
+  reply: (id, data)  => api.post(`/contact/${id}/reply`, data),
+  delete: (id)       => api.delete(`/contact/${id}`),
 };
 
 // ── Content API ──
 export const contentAPI = {
-  get: ()              => api.get('/content'),
-  update: (data)       => api.put('/content', data),
+  get: ()            => api.get('/content'),
+  update: (data)     => api.put('/content', data),
 };
 
 // ── Admin API ──
 export const adminAPI = {
-  login: (data)        => api.post('/admin/login', data),
-  register: (data)     => api.post('/admin/register', data),
-  getMe: ()            => api.get('/admin/me'),
-  getDashboard: ()     => api.get('/admin/dashboard'),
-  getAll: ()           => api.get('/admin/all'),
+  login: (data)      => api.post('/admin/login', data),
+  register: (data)   => api.post('/admin/register', data),
+  getMe: ()          => api.get('/admin/me'),
+  getDashboard: ()   => api.get('/admin/dashboard'),
+  getAll: ()         => api.get('/admin/all'),
 };
 
 export default api;

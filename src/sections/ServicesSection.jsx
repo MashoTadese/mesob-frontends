@@ -14,7 +14,7 @@ import {
   FaMapMarkedAlt, FaChartLine, FaFileSignature, FaEnvelopeOpenText,
   FaCog, FaUserCheck, FaBuilding, FaMoneyBillWave,
   FaCheckCircle, FaTimes, FaArrowLeft, FaClock,
-  FaMoneyBill, FaListOl, FaClipboardList, FaSpinner,
+  FaMoneyBill, FaListOl, FaClipboardList, FaSpinner, FaEnvelope,
 } from 'react-icons/fa';
 import { SERVICE_WINDOWS as STATIC_WINDOWS } from '../utils/windows';
 import { getRequirements as getRequirementsStatic } from '../utils/requirements';
@@ -22,7 +22,22 @@ import Button from '../components/Button';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// Build a static EN lookup from windows.js (always available, no API needed)
+// Floor name translations
+const FLOOR_NAMES = {
+  'Ground Floor': { en: 'Ground Floor', am: 'የታችኛው ፎቅ',    or: 'Cimdaa'       },
+  '1st Floor':    { en: '1st Floor',    am: '1ኛ ፎቅ',        or: 'Darbii 1ffaa' },
+  '2nd Floor':    { en: '2nd Floor',    am: '2ኛ ፎቅ',        or: 'Darbii 2ffaa' },
+  '3rd Floor':    { en: '3rd Floor',    am: '3ኛ ፎቅ',        or: 'Darbii 3ffaa' },
+  '4th Floor':    { en: '4th Floor',    am: '4ኛ ፎቅ',        or: 'Darbii 4ffaa' },
+  '5th Floor':    { en: '5th Floor',    am: '5ኛ ፎቅ',        or: 'Darbii 5ffaa' },
+};
+
+const getFloorName = (floor, lang) => {
+  if (!floor) return '';
+  const f = FLOOR_NAMES[floor];
+  if (!f) return floor;
+  return f[lang] || f.en;
+};
 // Maps each Oromo service string → English name
 const STATIC_EN_MAP = {};
 STATIC_WINDOWS.forEach((w) => {
@@ -136,7 +151,7 @@ function getRequirementsFromCache(serviceName) {
 
 const WINDOW_ICONS = {
   1: <FaIdCard className="w-7 h-7 text-white" />,
-  2: <FaHandHoldingUsd className="w-7 h-7 text-white" />,
+  2: <FaEnvelope className="w-7 h-7 text-white" />,
   3: <FaEnvelopeOpenText className="w-7 h-7 text-white" />,
   4: <FaBuilding className="w-7 h-7 text-white" />,
   5: <FaUserCheck className="w-7 h-7 text-white" />,
@@ -144,7 +159,7 @@ const WINDOW_ICONS = {
   7: <FaFileSignature className="w-7 h-7 text-white" />,
   8: <FaChartLine className="w-7 h-7 text-white" />,
   9: <FaMapMarkedAlt className="w-7 h-7 text-white" />,
-  10: <FaMoneyBillWave className="w-7 h-7 text-white" />,
+  10: <FaHandHoldingUsd className="w-7 h-7 text-white" />,
   11: <FaCog className="w-7 h-7 text-white" />,
 };
 
@@ -356,7 +371,7 @@ const WindowModal = ({ win, onClose }) => {
               {win.floor && (
                 <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: 'rgba(245,196,0,0.2)', color: '#F5C400' }}>
-                  🏢 {win.floor}
+                  🏢 {getFloorName(win.floor, lang)}
                 </span>
               )}
             </div>
@@ -581,7 +596,7 @@ const ServicesSection = () => {
                           <p className="text-sm font-semibold text-dark leading-snug">{displayText}</p>
                           <p className="text-xs text-gray-400 mt-0.5">
                             {item.win.nameEN} — {getWindowTitle(item.win)}
-                            {item.win.floor && <span className="ml-2">🏢 {item.win.floor}</span>}
+                            {item.win.floor && <span className="ml-2">🏢 {getFloorName(item.win.floor, currentLang)}</span>}
                           </p>
                         </div>
                         {/* Requirements button */}
@@ -630,7 +645,7 @@ const ServicesSection = () => {
                 </span>
                 {win.floor && (
                   <span className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full mb-2 ml-1" style={{ backgroundColor: '#EEF1FB', color: '#1E3578' }}>
-                    🏢 {win.floor}
+                    🏢 {getFloorName(win.floor, currentLang)}
                   </span>
                 )}
                 <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: '#1E3578' }}>

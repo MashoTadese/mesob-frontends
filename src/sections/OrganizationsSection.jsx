@@ -5,22 +5,83 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../context/LanguageContext';
+import civilServicesLogo from '../assets/Image/civil services.png';
+import tradeOfficeLogo from '../assets/Image/Trade  office.jpg';
+import buusaGonofaaLogo from '../assets/Image/coopeartive office(buusaa gonofaa).png';
+import energyWaterLogo from '../assets/Image/Energy and water office.png';
+import galiiRevenueLogo from '../assets/Image/Galii(revenue).png';
+import educationOfficeLogo from '../assets/Image/Education office.png';
+import healthOfficeLogo from '../assets/Image/Health office.jpg';
+import communicationLogo from '../assets/Image/Communication.png';
+import envProtectionLogo from '../assets/Image/Environmental protection Authority.png';
+import culturalTourismLogo from '../assets/Image/cultural and tourism.png';
+import psmqnLogo from '../assets/Image/PSMQN.png';
+import agricultureLogo from '../assets/Image/Agriculture office.png';
+import scienceTechLogo from '../assets/Image/Science and technology.png';
+import justiceAttorneyLogo from '../assets/Image/justice attorney office.jpg';
+import landLogo from '../assets/Image/land.jpg';
+import financialServiceLogo from '../assets/Image/Financial service.png';
+import constructionLogo from '../assets/Image/constraction.png';
+import socialAffairsLogo from '../assets/Image/social affairs office.jpg';
+import administrationLogo from '../assets/Image/Administration.jpg';
+import investmentLogo from '../assets/Image/investement.png';
+import houseOfficeLogo from '../assets/Image/House office.jpg';
 import {
   FaFileContract, FaGlobe, FaCoins, FaIndustry, FaMapMarked,
   FaBalanceScale, FaHandsHelping, FaBriefcase, FaBuilding,
-  FaArrowRight, FaCheckCircle, FaSearch, FaPhoneAlt, FaTimes,
+  FaCheckCircle, FaSearch, FaPhoneAlt, FaTimes,
+  FaTint, FaHospital, FaStore, FaBolt, FaMedkit, FaCog,
+  FaBroadcastTower, FaCar, FaSeedling, FaMoneyBillWave,
+  FaLaptopCode, FaHardHat, FaGraduationCap, FaHome,
+  FaLeaf, FaMap, FaHandshake, FaPiggyBank,
+  FaPaintBrush, FaShieldAlt, FaChartLine,
 } from 'react-icons/fa';
 import { ORGANIZATIONS, COLOR_MAP } from '../utils/constants';
+
+// Map logo filenames → imported assets
+const LOGO_MAP = {
+  'civil services.png': civilServicesLogo,
+  'Trade  office.jpg': tradeOfficeLogo,
+  'coopeartive office(buusaa gonofaa).png': buusaGonofaaLogo,
+  'Energy and water office.png': energyWaterLogo,
+  'Galii(revenue).png': galiiRevenueLogo,
+  'Education office.png': educationOfficeLogo,
+  'Health office.jpg': healthOfficeLogo,
+  'Communication.png': communicationLogo,
+  'Environmental protection Authority.png': envProtectionLogo,
+  'cultural and tourism.png': culturalTourismLogo,
+  'PSMQN.png': psmqnLogo,
+  'Agriculture office.png': agricultureLogo,
+  'Science and technology.png': scienceTechLogo,
+  'justice attorney office.jpg': justiceAttorneyLogo,
+  'land.jpg': landLogo,
+  'Financial service.png': financialServiceLogo,
+  'constraction.png': constructionLogo,
+  'social affairs office.jpg': socialAffairsLogo,
+  'Administration.jpg': administrationLogo,
+  'investement.png': investmentLogo,
+  'House office.jpg': houseOfficeLogo,
+};
 
 const ICON_MAP = {
   FaFileContract, FaGlobe, FaCoins, FaIndustry, FaMapMarked,
   FaBalanceScale, FaHandsHelping, FaBriefcase, FaBuilding,
+  FaTint, FaHospital, FaStore, FaBolt, FaMedkit, FaCog,
+  FaBroadcastTower, FaCar, FaSeedling, FaMoneyBillWave,
+  FaLaptopCode, FaHardHat, FaGraduationCap, FaHome,
+  FaLeaf, FaMap, FaHandshake, FaPiggyBank,
+  FaPaintBrush, FaShieldAlt, FaChartLine,
 };
 
 const OrgModal = ({ org, onClose }) => {
   const { t } = useTranslation();
+  const { currentLang } = useLanguage();
   const Icon   = ICON_MAP[org.icon] || FaBuilding;
   const colors = COLOR_MAP[org.color] || COLOR_MAP.primary;
+  const displayName = currentLang === 'am' && org.nameAM ? org.nameAM
+                    : currentLang === 'or' && org.nameOR ? org.nameOR
+                    : org.name;
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -30,12 +91,15 @@ const OrgModal = ({ org, onClose }) => {
         className="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl border border-primary-100"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start gap-4 mb-5">
-          <div className={`w-16 h-16 ${colors.bg} rounded-2xl flex items-center justify-center flex-shrink-0`}>
-            <Icon className={`w-8 h-8 ${colors.icon}`} />
+          <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden" style={{ background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }}>
+            {org.logo && LOGO_MAP[org.logo]
+              ? <img src={LOGO_MAP[org.logo]} alt={org.shortName} className="w-full h-full rounded-full" style={{ objectFit: 'cover' }} />
+              : <Icon className={`w-8 h-8 ${colors.icon}`} />
+            }
           </div>
           <div className="flex-1">
             <span className={`badge ${colors.badge} text-xs font-bold mb-1`}>{org.shortName}</span>
-            <h3 className="text-lg font-bold text-dark font-heading leading-tight">{org.name}</h3>
+            <h3 className="text-lg font-bold text-dark font-heading leading-tight">{displayName}</h3>
           </div>
           <button onClick={onClose}
             className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-colors flex-shrink-0">
@@ -68,11 +132,21 @@ const OrgModal = ({ org, onClose }) => {
 
 const OrganizationsSection = () => {
   const { t } = useTranslation();
+  const { currentLang } = useLanguage();
   const [search,   setSearch]   = useState('');
   const [selected, setSelected] = useState(null);
 
+  // Pick name based on current language
+  const getOrgName = (org) => {
+    if (currentLang === 'am' && org.nameAM) return org.nameAM;
+    if (currentLang === 'or' && org.nameOR) return org.nameOR;
+    return org.name;
+  };
+
   const filtered = ORGANIZATIONS.filter((o) =>
     o.name.toLowerCase().includes(search.toLowerCase()) ||
+    (o.nameOR && o.nameOR.toLowerCase().includes(search.toLowerCase())) ||
+    (o.nameAM && o.nameAM.toLowerCase().includes(search.toLowerCase())) ||
     o.shortName.toLowerCase().includes(search.toLowerCase()) ||
     o.services.some((s) => s.toLowerCase().includes(search.toLowerCase()))
   );
@@ -97,7 +171,7 @@ const OrganizationsSection = () => {
         </div>
 
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {filtered.map((org, index) => {
               const Icon   = ICON_MAP[org.icon] || FaBuilding;
               const colors = COLOR_MAP[org.color] || COLOR_MAP.primary;
@@ -106,21 +180,19 @@ const OrganizationsSection = () => {
                   initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }} transition={{ duration: 0.45, delay: index * 0.05 }}
                   onClick={() => setSelected(org)}
-                  className="card border border-gray-100 hover:border-primary-200 hover:-translate-y-1 transition-all cursor-pointer group overflow-hidden"
+                  className="cursor-pointer group overflow-hidden hover:-translate-y-1 transition-all rounded-2xl border border-gray-100 hover:border-primary-200 hover:shadow-lg"
+                  style={{ backgroundColor: '#EEF1FB' }}
                   role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setSelected(org)}>
-                  <div className={`h-1.5 ${colors.bg} group-hover:bg-primary transition-colors`} />
-                  <div className="p-5">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className={`w-12 h-12 ${colors.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0`}>
-                        <Icon className={`w-6 h-6 ${colors.icon}`} />
-                      </div>
-                      <span className={`badge ${colors.badge} text-xs font-bold`}>{org.shortName}</span>
+                  <div className="p-6 flex flex-col items-center text-center">
+                    {/* Logo/Icon — centered circle */}
+                    <div className="w-32 h-32 rounded-full flex items-center justify-center mb-4 overflow-hidden flex-shrink-0" style={{ background: 'transparent' }}>
+                      {org.logo && LOGO_MAP[org.logo]
+                        ? <img src={LOGO_MAP[org.logo]} alt={org.shortName} className="w-full h-full rounded-full" style={{ objectFit: 'contain' }} />
+                        : <div className="w-32 h-32 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.7)' }}><Icon className={`w-10 h-10 ${colors.icon}`} /></div>
+                      }
                     </div>
-                    <h3 className="font-bold text-dark font-heading text-sm mb-2 group-hover:text-primary transition-colors leading-snug">{org.name}</h3>
-                    <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">{org.description}</p>
-                    <div className="flex items-center gap-1 mt-3 text-xs font-semibold text-primary">
-                      {t('organizations.viewDetails')} <FaArrowRight className="w-3 h-3" />
-                    </div>
+                    {/* Name */}
+                    <h3 className="font-bold text-dark font-heading text-sm leading-snug group-hover:text-primary transition-colors">{getOrgName(org)}</h3>
                   </div>
                 </motion.div>
               );

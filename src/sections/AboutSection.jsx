@@ -29,10 +29,11 @@ const AboutSection = () => {
       .catch(function() {});
   }, []);
 
-  // Use API content if available, fall back to i18n
-  const para1      = (apiContent && apiContent.about_para1) || t('aboutPage.para1');
-  const para2      = (apiContent && apiContent.about_para2) || t('aboutPage.para2');
-  const para3      = (apiContent && apiContent.about_para3) || t('aboutPage.para3');
+  // Always use i18n for paragraphs (trilingual support)
+  // DB content (from admin About Us page) is ignored for paragraphs since locale handles translations
+  const para1      = t('aboutPage.para1');
+  const para2      = t('aboutPage.para2');
+  const para3      = t('aboutPage.para3');
   const highlights = (apiContent && apiContent.highlights && apiContent.highlights.length)
     ? apiContent.highlights
     : [t('aboutPage.highlight1'), t('aboutPage.highlight2'), t('aboutPage.highlight3'), t('aboutPage.highlight4')];
@@ -41,7 +42,6 @@ const AboutSection = () => {
     { name: 'Ato Derajje Dhaba',    title: 'Branch Director',            initials: 'DD', color: '#1E3578', photo: directorPhoto },
     { name: 'Ato Tesfaye Bekele',   title: 'Deputy Manager, Operations', initials: 'TB', color: '#2563eb', photo: null },
     { name: 'W/ro Selamawit Girma', title: 'Head of Digital Services',   initials: 'SG', color: '#7c3aed', photo: null },
-    { name: 'W/ro Hiwot Alemu',     title: 'Customer Experience Lead',   initials: 'HA', color: '#0d9488', photo: null },
   ];
 
   const mvv = [
@@ -59,7 +59,7 @@ const AboutSection = () => {
             <span className="w-1.5 h-1.5 bg-primary rounded-full" />{t('aboutPage.whoWe')}
           </span>
           <h2 className="section-title">
-            Ethiopia's Modern <span className="text-gradient">{t('aboutPage.modernPortal')}</span>
+            MESOB Sululta — <span className="text-gradient">{t('aboutPage.modernPortal')}</span>
           </h2>
           <p className="section-subtitle">{t('aboutPage.pageSubtitle')}</p>
         </div>
@@ -67,9 +67,9 @@ const AboutSection = () => {
         {/* Intro + Stats */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center mb-16">
           <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <p className="text-gray-600 leading-relaxed mb-4">{para1}</p>
-            <p className="text-gray-600 leading-relaxed mb-4">{para2}</p>
-            <p className="text-gray-600 leading-relaxed mb-8">{para3}</p>
+            <p className="text-gray-600 leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: para1 }} />
+            <p className="text-gray-600 leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: para2 }} />
+            <p className="text-gray-600 leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: para3 }} />
             <div className="flex flex-col gap-3">
               {highlights.map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
@@ -85,7 +85,7 @@ const AboutSection = () => {
               {STATISTICS.map((stat) => (
                 <div key={stat.id} className="card p-6 border border-gray-100 text-center hover:-translate-y-1 transition-transform">
                   <p className="text-4xl font-bold text-primary font-heading mb-1">{stat.value}</p>
-                  <p className="text-gray-500 text-sm">{stat.label}</p>
+                  <p className="text-gray-500 text-sm">{t(stat.labelKey)}</p>
                 </div>
               ))}
             </div>
@@ -185,11 +185,11 @@ const AboutSection = () => {
             </span>
           </motion.div>
 
-          {/* Other team members — row below */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl">
+          {/* Other team members — row below, centered */}
+          <div className="flex justify-center gap-6 w-full max-w-2xl flex-wrap">
             {leadership.slice(1).map((person, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="card p-6 border border-gray-100 text-center hover:-translate-y-1 transition-transform">
+                className="card p-6 border border-gray-100 text-center hover:-translate-y-1 transition-transform w-56">
                 <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold font-heading"
                   style={{ backgroundColor: person.color }}>
                   {person.initials}

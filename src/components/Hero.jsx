@@ -232,7 +232,7 @@ const Hero = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchKey}
-                placeholder={currentLang === 'am' ? 'አገልግሎቶች እና ተቋማትን ይፈልጉ' : currentLang === 'or' ? 'Tajaajilota fi dhaabbilee barbaadi' : 'Search for Services and Institutions'}
+                placeholder={currentLang === 'am' ? 'አገልግሎቶች እና ቢሮዎችን ይፈልጉ' : currentLang === 'or' ? 'Tajaajilota fi waajjiraalee barbaadi' : 'Search for Services and Offices'}
                 className="flex-1 bg-transparent text-white placeholder-white/50 outline-none text-sm"
                 aria-label="Search services"
               />

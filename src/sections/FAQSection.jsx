@@ -11,7 +11,8 @@ import { FAQS as STATIC_FAQS } from '../utils/constants';
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const FAQSection = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language || 'en';
   const [faqs, setFaqs] = useState(STATIC_FAQS);
 
   useEffect(() => {
@@ -31,6 +32,22 @@ const FAQSection = () => {
       .catch(() => { /* keep static defaults on error */ });
   }, []);
 
+  // Pick question/answer in the current language
+  const localizedFaqs = faqs.slice(0, 10).map((faq) => {
+    let question = faq.question;
+    let answer   = faq.answer;
+
+    if (lang === 'am') {
+      question = faq.questionAM || faq.question;
+      answer   = faq.answerAM   || faq.answer;
+    } else if (lang === 'or') {
+      question = faq.questionOR || faq.question;
+      answer   = faq.answerOR   || faq.answer;
+    }
+
+    return { ...faq, question, answer };
+  });
+
   return (
     <section className="py-20 bg-light" aria-label="FAQ" id="faq">
       <div className="section-container max-w-3xl">
@@ -41,7 +58,7 @@ const FAQSection = () => {
           <h2 className="section-title">{t('faq.heading')}</h2>
           <p className="section-subtitle">{t('faq.subtitle')}</p>
         </div>
-        <FAQAccordion faqs={faqs.slice(0, 10)} />
+        <FAQAccordion faqs={localizedFaqs} />
         <div className="text-center mt-8">
           <p className="text-gray-500 text-sm mb-4">{t('faq.cantFind')}</p>
           <button

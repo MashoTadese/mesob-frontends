@@ -2,7 +2,7 @@
 // MESOB - Complaint Section (fully i18n)
 // ============================================================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,6 +16,19 @@ import { complaintAPI } from '../services/api';
 
 const ComplaintSection = () => {
   const { t } = useTranslation();
+  const [allowAnonymous, setAllowAnonymous] = useState(true);
+
+  // Check if anonymous complaints are allowed
+  useEffect(() => {
+    fetch((process.env.REACT_APP_API_URL || 'http://localhost:5000/api') + '/content')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.data && data.data.allow_anonymous_complaints === false) {
+          setAllowAnonymous(false);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const DEPARTMENT_OPTIONS = [
     { value: 'window1',  label: t('complaintSection.w1') },
@@ -155,7 +168,8 @@ const ComplaintSection = () => {
           <p className="text-gray-500 text-sm mb-6">{t('complaintSection.formSubtitle')}</p>
 
           <form onSubmit={handleSubmit} noValidate aria-label="Complaint form">
-            {/* Anonymous toggle */}
+            {/* Anonymous toggle — only shown if admin has enabled it */}
+            {allowAnonymous && (
             <label className="flex items-center gap-3 mb-6 cursor-pointer">
               <input type="checkbox" name="anonymous" checked={values.anonymous} onChange={handleChange}
                 className="w-4 h-4 accent-primary rounded" />
@@ -164,6 +178,7 @@ const ComplaintSection = () => {
                 <p className="text-xs text-gray-400">{t('complaintSection.anonymousDesc')}</p>
               </div>
             </label>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <Input label={t('complaintSection.fullName')} name="fullName" placeholder={t('complaintSection.fullName')}
