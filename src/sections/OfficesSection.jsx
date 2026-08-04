@@ -27,6 +27,9 @@ import socialAffairsLogo from '../assets/Image/social affairs office.jpg';
 import administrationLogo from '../assets/Image/Administration.jpg';
 import investmentLogo from '../assets/Image/investement.png';
 import houseOfficeLogo from '../assets/Image/House office.jpg';
+import policeLogo from '../assets/Image/police.jpg';
+import transportationLogo from '../assets/Image/Transportation.jpg';
+import chuoLogo from '../assets/Image/CHUO.jpg';
 import {
   FaFileContract, FaGlobe, FaCoins, FaIndustry, FaMapMarked,
   FaBalanceScale, FaHandsHelping, FaBriefcase, FaBuilding,
@@ -62,6 +65,9 @@ const LOGO_MAP = {
   'Administration.jpg': administrationLogo,
   'investement.png': investmentLogo,
   'House office.jpg': houseOfficeLogo,
+  'police.jpg': policeLogo,
+  'Transportation.jpg': transportationLogo,
+  'CHUO.jpg': chuoLogo,
 };
 
 const ICON_MAP = {
@@ -130,7 +136,7 @@ const OrgModal = ({ org, onClose }) => {
   );
 };
 
-const OrganizationsSection = () => {
+const OfficesSection = () => {
   const { t } = useTranslation();
   const { currentLang } = useLanguage();
   const [search,   setSearch]   = useState('');
@@ -213,4 +219,4 @@ const OrganizationsSection = () => {
   );
 };
 
-export default OrganizationsSection;
+export default OfficesSection;

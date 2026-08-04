@@ -43,7 +43,7 @@ const en = {
   stats: {
     citizens: 'Citizens Served',
     services: 'Gov\'t Services',
-    organizations: 'Organizations',
+    organizations: 'Offices',
     offices: 'Offices',
     serviceWindows: 'Service Windows',
     trackApp: 'Track Application',
@@ -123,11 +123,18 @@ const en = {
     pageSubtitle: '28+ government offices operating under one roof — all accessible at the Sululta Branch.',
   },
 
-  // --- Testimonials ---
-  testimonials: {
-    badge: 'Citizen Feedback',
-    heading: 'What Citizens Say',
-    subtitle: 'Real experiences from citizens who have used our services.',
+
+  // --- Gallery ---
+  gallery: {
+    badge: 'Photo Gallery',
+    heading: 'Our Gallery',
+    subtitle: 'Photos from MESOB Sululta Branch — events, services, and our team.',
+    all: 'All',
+    viewAll: 'View Full Gallery',
+    showing: 'Showing',
+    of: 'of',
+    photos: 'photos',
+    noPhotos: 'No photos available yet.',
   },
 
   // --- FAQ ---
@@ -169,16 +176,16 @@ const en = {
     foundationTitle: 'Mission, Vision & Values',
     foundationSubtitle: 'The principles and goals that guide everything we do at MESOB Sululta Branch.',
     mission: 'Our Mission',
-    missionText: 'To deliver efficient, transparent, and citizen-centric government services, empowering every citizen of Sululta with equal access to public services.',
+    missionText: 'To deliver efficient, transparent, and citizen-centric government services, empowering every citizen with equal access to public services.\n\n1. Provide all 180+ government services under one roof — eliminating the need to visit multiple offices.\n\n2. Ensure every citizen is served with dignity, respect, and professionalism regardless of background.\n\n3. Continuously improve service delivery through technology, feedback, and innovation.',
     vision: 'Our Vision',
-    visionText: 'A fully digital, accountable service hub where every citizen can access high-quality public services conveniently and securely.',
+    visionText: 'A fully digital, accountable service hub where every citizen can access high-quality public services conveniently and securely.\n\n1. Become the leading model of one-stop government service delivery in Ethiopia.\n\n2. Build a paperless, fully digital system that saves citizens time and reduces bureaucracy.\n\n3. Create a trusted, transparent institution where every citizen feels heard and valued.',
     objectives: 'Our Objectives',
-    objectivesText: 'Reduce service delivery time, achieve high citizen satisfaction, provide all services digitally, and eliminate unnecessary bureaucracy.',
+    objectivesText: 'Reduce service delivery time, achieve high citizen satisfaction, provide all services digitally, and eliminate unnecessary bureaucracy.\n\n1. Reduce average service waiting time to under 30 minutes for all citizens.\n\n2. Achieve 95%+ citizen satisfaction rating through quality service and professional staff.\n\n3. Digitize all 180+ government services and enable online tracking of every application.',
     leadershipBadge: 'Leadership',
     leadershipTitle: 'Meet Our Leadership Team',
     leadershipSubtitle: 'Dedicated professionals leading MESOB Sululta Branch with excellence.',
     structureBadge: 'Our Structure',
-    structureTitle: 'Organizations at MESOB',
+    structureTitle: 'Offices at MESOB',
     structureSubtitle: '24 federal institutions operating under one roof at the Sululta Branch.',
     ctaTitle: 'Ready to Access Government Services?',
     ctaSub: 'Visit MESOB Sululta Branch — all government services in one modern, digital location.',
@@ -208,7 +215,7 @@ const en = {
     callUs: 'Call Us',
     emailUs: 'Email Us',
     visitUs: 'Visit Us',
-    callSub: 'Mon–Fri, 8:00 AM – 5:00 PM',
+    callSub: 'Mon–Fri, 2:00 AM – 11:00 PM',
     emailSub: 'We reply within 1–2 business days',
     visitAddr: 'Sululta, Oromia, Ethiopia',
     visitSub: 'MESOB One-Stop Service Center',

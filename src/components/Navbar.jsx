@@ -158,8 +158,8 @@ const Navbar = () => {
             </div>
             <div className="flex flex-col leading-tight">
               <span className="font-bold text-base font-heading text-white leading-none">MESOB</span>
-              <span className="text-[10px] font-medium leading-none hidden sm:block" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                Sululta Branch
+              <span className="text-[10px] font-medium leading-none" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                {currentLang === 'or' ? 'Damee Sulultaa' : currentLang === 'am' ? 'ሱሉልታ ቅርንጫፍ' : 'Sululta Branch'}
               </span>
             </div>
           </button>

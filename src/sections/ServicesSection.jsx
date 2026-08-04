@@ -12,7 +12,7 @@ import { useLanguage } from '../context/LanguageContext';
 import {
   FaIdCard, FaHandHoldingUsd, FaBriefcase,
   FaMapMarkedAlt, FaChartLine, FaFileSignature, FaEnvelopeOpenText,
-  FaCog, FaUserCheck, FaBuilding, FaMoneyBillWave,
+  FaCog, FaUserCheck, FaBuilding,
   FaCheckCircle, FaTimes, FaArrowLeft, FaClock,
   FaMoneyBill, FaListOl, FaClipboardList, FaSpinner, FaEnvelope,
 } from 'react-icons/fa';

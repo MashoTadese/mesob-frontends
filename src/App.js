@@ -13,8 +13,9 @@ import Footer from './components/Footer';
 import Hero              from './components/Hero';
 import AboutSection      from './sections/AboutSection';
 import ServicesSection   from './sections/ServicesSection';
-import OrganizationsSection from './sections/OrganizationsSection';
+import OfficesSection from './sections/OfficesSection';
 import NewsSection       from './sections/NewsSection';
+import GallerySection    from './sections/GallerySection';
 import FAQSection        from './sections/FAQSection';
 import ComplaintSection  from './sections/ComplaintSection';
 import ContactSection    from './sections/ContactSection';
@@ -23,6 +24,7 @@ import ContactSection    from './sections/ContactSection';
 import { PageLoader }    from './components/Loader';
 import { Suspense, lazy } from 'react';
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const GalleryPage  = lazy(() => import('./pages/GalleryPage'));
 
 // One scrollable page with all sections
 const MainPage = () => (
@@ -30,8 +32,9 @@ const MainPage = () => (
     <div id="home">          <Hero />                  </div>
     <div id="about">         <AboutSection />           </div>
     <div id="services">      <ServicesSection />        </div>
-    <div id="organizations"> <OrganizationsSection />   </div>
+    <div id="organizations"> <OfficesSection />   </div>
     <div id="news">          <NewsSection />            </div>
+    <div id="gallery">       <GallerySection />         </div>
     <div id="faq">           <FAQSection />             </div>
     <div id="complaint">     <ComplaintSection />       </div>
     <div id="contact">       <ContactSection />         </div>
@@ -45,6 +48,9 @@ function App() {
         <Routes>
           {/* 404 */}
           <Route path="/404" element={<NotFoundPage />} />
+
+          {/* Full Gallery page */}
+          <Route path="/gallery" element={<GalleryPage />} />
 
           {/* Everything else → single page */}
           <Route path="*" element={
