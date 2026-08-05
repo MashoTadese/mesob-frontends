@@ -142,9 +142,9 @@ const Hero = () => {
             <div className="w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center flex-shrink-0"
               style={{ boxShadow: '0 0 0 4px rgba(245,196,0,0.5)', overflow: 'hidden' }}>
               <img
-                src={partnerLogo}
-                alt="Partner Logo"
-                className="w-full h-full rounded-full"
+                src={heroPicture}
+                alt="Sululta Branch"
+                className="w-full h-full"
                 style={{ objectFit: 'cover' }}
               />
             </div>
@@ -157,9 +157,9 @@ const Hero = () => {
             <div className="w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center flex-shrink-0"
               style={{ boxShadow: '0 0 0 4px rgba(245,196,0,0.5), 0 0 40px rgba(245,196,0,0.2)', overflow: 'hidden' }}>
               <img
-                src={heroPicture}
-                alt="Sululta Branch"
-                className="w-full h-full"
+                src={partnerLogo}
+                alt="Partner Logo"
+                className="w-full h-full rounded-full"
                 style={{ objectFit: 'cover' }}
               />
             </div>

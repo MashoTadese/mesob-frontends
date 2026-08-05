@@ -125,8 +125,8 @@ export const CONTACT_INFO = {
   phone:       '+251 11 551 2345',
   phone2:      '+251 11 551 6789',
   email:       'info@mesob.gov.et',
-  hours:       'Mon–Fri: 8:00 AM – 5:00 PM',
-  hoursSat:    'Saturday: 8:00 AM – 12:00 PM',
+  hours:       'Mon–Fri: 2:00 AM – 11:00 PM',
+  hoursSat:    'Saturday: 2:00 AM – 6:00 PM',
   mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3936.1!2d38.7!3d9.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85b1234!2sSululta!5e0!3m2!1sen!2set!4v1234567890',
   social: {
     facebook: 'https://facebook.com',
@@ -151,9 +151,9 @@ export const FAQS = [
     question:   'What are the working hours?',
     questionAM: 'የሥራ ሰዓት ስንት ነው?',
     questionOR: 'Sa\'aatiin hojii meeqa dha?',
-    answer:   'Monday to Friday: 8:00 AM – 5:00 PM. Saturday: 8:00 AM – 12:00 PM. Closed on Sundays and public holidays.',
-    answerAM: 'ሰኞ እስከ አርብ: 8:00 AM – 5:00 PM። ቅዳሜ: 8:00 AM – 12:00 PM። እሁድ እና ሕዝባዊ በዓሎች ዝግ ነው።',
-    answerOR: 'Wiixata hanga Jimaata: 8:00 AM – 5:00 PM. Sanbata: 8:00 AM – 12:00 PM. Dilbata fi ayyaana biyyoolessaa cufaadha.',
+    answer:   'Monday to Friday: 2:00 AM – 11:00 PM. Saturday: 2:00 AM – 6:00 PM.',
+    answerAM: 'ሰኞ እስከ አርብ: 2:00 AM – 11:00 PM። ቅዳሜ: 2:00 AM – 6:00 PM። ',
+    answerOR: 'Wiixata hanga Jimaata: 2:00 AM – 11:00 PM. Sanbata: 2:00 AM – 6:00 PM.',
   },
   {
     id: 3,

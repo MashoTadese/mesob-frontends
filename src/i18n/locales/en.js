@@ -18,7 +18,7 @@ const en = {
 
   // --- Top bar ---
   topbar: {
-    hours: 'Mon–Sat: 2:00 AM – 11:00 PM | Sat: 2:00 AM – 6:00 PM',
+    hours: 'Mon–Fri: 2:00 AM – 11:00 PM | Sat: 2:00 AM – 6:00 PM',
   },
 
   // --- Hero ---
@@ -184,6 +184,12 @@ const en = {
     leadershipBadge: 'Leadership',
     leadershipTitle: 'Meet Our Leadership Team',
     leadershipSubtitle: 'Dedicated professionals leading MESOB Sululta Branch with excellence.',
+    branchDirector: 'Branch Manager',
+    directorName: 'Ato Derajje Debala',
+    deputyManagerName: 'Ato Tasfaye Bekele',
+    headDigitalName: 'Ato Daniel Birhanu',
+    deputyManager: 'Deputy Manager, Operations',
+    headDigital: 'Head of Digital Services',
     structureBadge: 'Our Structure',
     structureTitle: 'Offices at MESOB',
     structureSubtitle: '24 federal institutions operating under one roof at the Sululta Branch.',
@@ -299,7 +305,7 @@ const en = {
     heroSub: 'Our branch provides {{count}} service windows with {{total}}+ government services.',
     windows: 'Windows',
     totalServices: 'Total Services',
-    workingDays: 'Mon-sat',
+    workingDays: 'Mon-Fri',
     clickHint: 'Click any window card to see all services provided at that window.',
     notSure: 'Not sure which window to visit?',
     notSureDesc: 'Come to MESOB Sululta Branch — our reception staff will guide you.',

@@ -39,11 +39,10 @@ const AboutSection = () => {
     : [t('aboutPage.highlight1'), t('aboutPage.highlight2'), t('aboutPage.highlight3'), t('aboutPage.highlight4')];
 
   const leadership = [
-    { name: 'Ato Derajje Dhaba',    title: 'Branch Director',            initials: 'DD', color: '#1E3578', photo: directorPhoto },
-    { name: 'Ato Tesfaye Bekele',   title: 'Deputy Manager, Operations', initials: 'TB', color: '#2563eb', photo: null },
-    { name: 'W/ro Selamawit Girma', title: 'Head of Digital Services',   initials: 'SG', color: '#7c3aed', photo: null },
+    { name: t('aboutPage.directorName'),      title: t('aboutPage.branchDirector'),  initials: 'DD', color: '#1E3578', photo: directorPhoto },
+    { name: t('aboutPage.deputyManagerName'), title: t('aboutPage.deputyManager'),   initials: 'TB', color: '#2563eb', photo: null },
+    { name: t('aboutPage.headDigitalName'),   title: t('aboutPage.headDigital'),     initials: 'DB', color: '#7c3aed', photo: null },
   ];
-
   const mvv = [
     { icon: <FaBullseye className="w-7 h-7 text-white" />, label: t('aboutPage.mission'),    text: t('aboutPage.missionText'),    style: { background: 'linear-gradient(135deg, #0F1F5C, #1E3578)' } },
     { icon: <FaEye className="w-7 h-7 text-white" />,      label: t('aboutPage.vision'),     text: t('aboutPage.visionText'),     style: { background: 'linear-gradient(135deg, #1a1a2e, #2d2d4e)' } },
@@ -181,7 +180,7 @@ const AboutSection = () => {
             <p className="text-gray-500 text-sm mb-2">{leadership[0].title}</p>
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold"
               style={{ backgroundColor: '#F5C400', color: '#0F1F5C' }}>
-              ★ Branch Director
+              ★ {t('aboutPage.branchDirector')}
             </span>
           </motion.div>
 

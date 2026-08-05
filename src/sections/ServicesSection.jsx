@@ -527,8 +527,8 @@ const ServicesSection = () => {
           <div className="flex flex-wrap justify-center gap-8 mt-6">
             {[
               { value: windows.length, label: t('servicesPage.windows') },
-              { value: `${total}+`,    label: t('servicesPage.totalServices') },
-              { value: '8:00–5:00',    label: t('servicesPage.workingDays') },
+              { value: '164+',         label: t('servicesPage.totalServices') },
+              { value: '2:30–11:30',    label: t('servicesPage.workingDays') },
             ].map((s, i) => (
               <div key={i} className="text-center">
                 <p className="text-2xl font-bold font-heading text-primary">{s.value}</p>
