@@ -11,7 +11,7 @@ export const SITE_DESCRIPTION =
 // Statistics
 export const STATISTICS = [
   { id: 1, value: '500+', labelKey: 'stats.citizens',  icon: 'FaUsers' },
-  { id: 2, value: '180+', labelKey: 'stats.services',  icon: 'FaConciergeBell' },
+  { id: 2, value: '164+', labelKey: 'stats.services',  icon: 'FaConciergeBell' },
   { id: 3, value: '28+',  labelKey: 'stats.offices',   icon: 'FaBuilding' },
   { id: 4, value: '350+', labelKey: 'stats.employees', icon: 'FaUserTie' },
 ];
