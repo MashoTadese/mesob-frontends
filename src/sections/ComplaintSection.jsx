@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../context/LanguageContext';
 import {
   FaExclamationTriangle, FaUser, FaEnvelope, FaPhoneAlt,
   FaCheckCircle, FaTimesCircle, FaPaperPlane,
@@ -16,7 +17,9 @@ import { complaintAPI } from '../services/api';
 
 const ComplaintSection = () => {
   const { t } = useTranslation();
+  const { currentLang } = useLanguage();
   const [allowAnonymous, setAllowAnonymous] = useState(true);
+  const [rawWindows, setRawWindows] = useState([]);
 
   // Check if anonymous complaints are allowed
   useEffect(() => {
@@ -30,20 +33,60 @@ const ComplaintSection = () => {
       .catch(() => {});
   }, []);
 
-  const DEPARTMENT_OPTIONS = [
-    { value: 'window1',  label: t('complaintSection.w1') },
-    { value: 'window2',  label: t('complaintSection.w2') },
-    { value: 'window3',  label: t('complaintSection.w3') },
-    { value: 'window4',  label: t('complaintSection.w4') },
-    { value: 'window5',  label: t('complaintSection.w5') },
-    { value: 'window6',  label: t('complaintSection.w6') },
-    { value: 'window7',  label: t('complaintSection.w7') },
-    { value: 'window8',  label: t('complaintSection.w8') },
-    { value: 'window9',  label: t('complaintSection.w9') },
-    { value: 'window10', label: t('complaintSection.w10') },
-    { value: 'window11', label: t('complaintSection.w11') },
-    { value: 'general',  label: t('complaintSection.wGeneral') },
-  ];
+  const [departmentOptions, setDepartmentOptions] = useState([]);
+
+  // Fetch raw window data once from API
+  useEffect(() => {
+    fetch((process.env.REACT_APP_API_URL || 'http://localhost:5000/api') + '/services')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.data && data.data.length > 0) {
+          const sorted = [...data.data].sort((a, b) => (a.order || 0) - (b.order || 0));
+          setRawWindows(sorted);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Rebuild dropdown labels whenever language or raw windows change
+  useEffect(() => {
+    if (rawWindows.length > 0) {
+      const opts = rawWindows.map(win => {
+        let winName, winTitle;
+        if (currentLang === 'am') {
+          winName  = win.nameAM  || win.nameEN  || win.name  || ('Window ' + win.windowId);
+          winTitle = win.titleAM || win.titleEN || win.title || '';
+        } else if (currentLang === 'or') {
+          winName  = win.name    || win.nameEN  || ('Window ' + win.windowId);
+          winTitle = win.title   || win.titleEN || '';
+        } else {
+          // English (default)
+          winName  = win.nameEN  || win.name    || ('Window ' + win.windowId);
+          winTitle = win.titleEN || win.title   || '';
+        }
+        const label = winTitle ? `${winName} — ${winTitle}` : winName;
+        return { value: win.windowId || win.nameEN || win.name, label };
+      });
+      opts.push({ value: 'general', label: t('complaintSection.wGeneral') });
+      setDepartmentOptions(opts);
+    } else {
+      // Fallback to static list if API returned nothing
+      setDepartmentOptions([
+        { value: 'window1',  label: t('complaintSection.w1') },
+        { value: 'window2',  label: t('complaintSection.w2') },
+        { value: 'window3',  label: t('complaintSection.w3') },
+        { value: 'window4',  label: t('complaintSection.w4') },
+        { value: 'window5',  label: t('complaintSection.w5') },
+        { value: 'window6',  label: t('complaintSection.w6') },
+        { value: 'window7',  label: t('complaintSection.w7') },
+        { value: 'window8',  label: t('complaintSection.w8') },
+        { value: 'window9',  label: t('complaintSection.w9') },
+        { value: 'window10', label: t('complaintSection.w10') },
+        { value: 'window11', label: t('complaintSection.w11') },
+        { value: 'general',  label: t('complaintSection.wGeneral') },
+      ]);
+    }
+  }, [rawWindows, currentLang, t]);
 
   const TYPE_OPTIONS = [
     { value: 'delay',      label: t('complaintSection.typeDelay') },
@@ -201,7 +244,7 @@ const ComplaintSection = () => {
               <Select label={t('complaintSection.department')} name="department"
                 value={values.department} onChange={handleChange} onBlur={handleBlur}
                 error={errors.department} touched={touched.department}
-                required options={DEPARTMENT_OPTIONS} placeholder={t('complaintSection.deptPlaceholder')} />
+                required options={departmentOptions} placeholder={t('complaintSection.deptPlaceholder')} />
             </div>
 
             <div className="mb-4">
